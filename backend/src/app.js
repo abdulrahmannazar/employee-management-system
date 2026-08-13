@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 
+const companyRoutes = require("./routes/companyRoutes");
+
 const app = express();
 
 // Middleware
@@ -13,5 +15,8 @@ app.get("/", (req, res) => {
         message: "Employee Management API is running"
     });
 });
+
+// Company routes
+app.use("/api/companies", companyRoutes);
 
 module.exports = app;
