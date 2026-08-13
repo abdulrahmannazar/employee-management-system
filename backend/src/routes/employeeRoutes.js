@@ -8,16 +8,42 @@ const {
     deleteEmployee
 } = require("../controllers/employeeController");
 
+const authenticateToken = require("../middleware/authMiddleware");
+const authorizeRoles = require("../middleware/roleMiddleware");
+
 const router = express.Router();
 
-router.post("/", createEmployee);
+router.get(
+    "/",
+    authenticateToken,
+    getEmployees
+);
 
-router.get("/", getEmployees);
+router.get(
+    "/:id",
+    authenticateToken,
+    getEmployeeById
+);
 
-router.get("/:id", getEmployeeById);
+router.post(
+    "/",
+    authenticateToken,
+    authorizeRoles("ADMIN", "HR"),
+    createEmployee
+);
 
-router.put("/:id", updateEmployee);
+router.put(
+    "/:id",
+    authenticateToken,
+    authorizeRoles("ADMIN", "HR"),
+    updateEmployee
+);
 
-router.delete("/:id", deleteEmployee);
+router.delete(
+    "/:id",
+    authenticateToken,
+    authorizeRoles("ADMIN"),
+    deleteEmployee
+);
 
 module.exports = router;

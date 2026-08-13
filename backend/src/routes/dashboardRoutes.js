@@ -4,8 +4,14 @@ const {
     getDashboard
 } = require("../controllers/dashboardController");
 
+const authenticateToken = require("../middleware/authMiddleware");
+
 const router = express.Router();
 
-router.get("/", getDashboard);
+router.get(
+    "/",
+    authenticateToken,
+    getDashboard
+);
 
 module.exports = router;
