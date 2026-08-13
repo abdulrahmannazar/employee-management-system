@@ -174,8 +174,108 @@ const createEmployee = async (req, res) => {
 
 const getEmployees = async (req, res) => {
     try {
-        const result = await pool.query(
-            `SELECT
+        const {
+            search,
+            company_id,
+            department_id,
+            status,
+            sort = "employee_id",
+            order = "asc",
+            page = 1,
+            limit = 10
+        } = req.query;
+
+        const pageNumber = Math.max(parseInt(page) || 1, 1);
+
+        const limitNumber = Math.min(
+            Math.max(parseInt(limit) || 10, 1),
+            100
+        );
+
+        const offset = (pageNumber - 1) * limitNumber;
+
+        // Allowed sort columns
+        const allowedSortColumns = {
+            employee_id: "e.employee_id",
+            first_name: "e.first_name",
+            last_name: "e.last_name",
+            joining_date: "e.joining_date",
+            status: "e.status"
+        };
+
+        const sortColumn =
+            allowedSortColumns[sort] ||
+            "e.employee_id";
+
+        const sortOrder =
+            order.toLowerCase() === "desc"
+                ? "DESC"
+                : "ASC";
+
+        const conditions = [];
+        const values = [];
+
+        // Search
+        if (search) {
+            values.push(`%${search}%`);
+
+            conditions.push(`
+                (
+                    LOWER(e.first_name) LIKE LOWER($${values.length})
+                    OR LOWER(e.last_name) LIKE LOWER($${values.length})
+                    OR LOWER(e.email) LIKE LOWER($${values.length})
+                )
+            `);
+        }
+
+        // Company filter
+        if (company_id) {
+            values.push(company_id);
+
+            conditions.push(
+                `e.company_id = $${values.length}`
+            );
+        }
+
+        // Department filter
+        if (department_id) {
+            values.push(department_id);
+
+            conditions.push(
+                `e.department_id = $${values.length}`
+            );
+        }
+
+        // Status filter
+        if (status) {
+            values.push(status);
+
+            conditions.push(
+                `e.status = $${values.length}`
+            );
+        }
+
+        const whereClause =
+            conditions.length > 0
+                ? `WHERE ${conditions.join(" AND ")}`
+                : "";
+
+        // Count
+        const countResult = await pool.query(
+            `
+            SELECT COUNT(*)::INTEGER AS total
+            FROM employees e
+            ${whereClause}
+            `,
+            values
+        );
+
+        const total = countResult.rows[0].total;
+
+        // Employees
+        const employeeResult = await pool.query(
+            `
+            SELECT
                 e.employee_id,
                 e.first_name,
                 e.last_name,
@@ -191,33 +291,59 @@ const getEmployees = async (req, res) => {
                 d.name AS department_name,
 
                 m.employee_id AS manager_id,
-                CONCAT(m.first_name, ' ', m.last_name) AS manager_name
+                CONCAT(
+                    m.first_name,
+                    ' ',
+                    m.last_name
+                ) AS manager_name
 
-             FROM employees e
+            FROM employees e
 
-             JOIN companies c
+            JOIN companies c
                 ON e.company_id = c.company_id
 
-             JOIN departments d
+            JOIN departments d
                 ON e.department_id = d.department_id
 
-             LEFT JOIN employees m
+            LEFT JOIN employees m
                 ON e.manager_id = m.employee_id
 
-             ORDER BY e.employee_id`
+            ${whereClause}
+
+            ORDER BY ${sortColumn} ${sortOrder}
+
+            LIMIT $${values.length + 1}
+            OFFSET $${values.length + 2}
+            `,
+            [...values, limitNumber, offset]
         );
 
-        res.status(200).json(result.rows);
+        const totalPages = Math.ceil(
+            total / limitNumber
+        );
+
+        res.status(200).json({
+            employees: employeeResult.rows,
+
+            pagination: {
+                current_page: pageNumber,
+                per_page: limitNumber,
+                total_items: total,
+                total_pages: totalPages
+            }
+        });
 
     } catch (error) {
-        console.error("Get employees error:", error);
+        console.error(
+            "Get employees error:",
+            error
+        );
 
         res.status(500).json({
             message: "Failed to fetch employees"
         });
     }
 };
-
 
 
 // GET ONE EMPLOYEE
@@ -245,7 +371,11 @@ const getEmployeeById = async (req, res) => {
                 d.name AS department_name,
 
                 m.employee_id AS manager_id,
-                CONCAT(m.first_name, ' ', m.last_name) AS manager_name
+                CONCAT(
+                    m.first_name,
+                    ' ',
+                    m.last_name
+                ) AS manager_name
 
              FROM employees e
 
@@ -278,7 +408,6 @@ const getEmployeeById = async (req, res) => {
         });
     }
 };
-
 
 
 // UPDATE EMPLOYEE
