@@ -1968,16 +1968,20 @@ function EmployeesPage() {
 
                     <select
                       name="status"
-                      value={
-                        employeeForm.status
-                      }
-                      onChange={
-                        handleEmployeeFormChange
-                      }
+                      value={employeeForm.status}
+                      onChange={handleEmployeeFormChange}
                     >
 
                       <option value="ACTIVE">
                         Active
+                      </option>
+
+                      <option value="ON_LEAVE">
+                        On Leave
+                      </option>
+
+                      <option value="RESIGNED">
+                        Resigned
                       </option>
 
                       <option value="TERMINATED">
