@@ -1,3 +1,4 @@
+
 import "./CompanyDetailsPage.css";
 
 import { useEffect, useState } from "react";
@@ -6,6 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import homeIcon from "./assets/home.png";
 import officeIcon from "./assets/office-building.png";
 import teamIcon from "./assets/team.png";
+
+const API_URL = "http://localhost:5000/api";
 
 function CompanyDetailsPage() {
   const navigate = useNavigate();
@@ -19,65 +22,83 @@ function CompanyDetailsPage() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const loadCompany = async () => {
-      try {
-        setLoading(true);
-        setError("");
+  // CRUD
+  const [showModal, setShowModal] = useState(false);
+  const [editingDepartment, setEditingDepartment] = useState(null);
+  const [saving, setSaving] = useState(false);
 
-        const token = localStorage.getItem("token");
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("success");
 
-        if (!token) {
-          throw new Error("Authentication token is required");
-        }
+  const [form, setForm] = useState({
+    name: "",
+    status: "ACTIVE",
+  });
 
-        const response = await fetch(
-          `http://localhost:5000/api/departments/company/${companyId}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+  // =====================================================
+  // LOAD COMPANY + DEPARTMENTS
+  // =====================================================
 
-        const data = await response.json();
+  const loadCompany = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-        if (!response.ok) {
-          throw new Error(
-            data?.message || "Failed to load company details"
-          );
-        }
+      const token = localStorage.getItem("token");
 
-        console.log("Company details:", data);
-
-        setCompany(data?.company || null);
-
-        setDepartments(
-          Array.isArray(data?.departments)
-            ? data.departments
-            : []
-        );
-      } catch (err) {
-        console.error("Company details error:", err);
-
-        setError(
-          err.message || "Failed to load company details"
-        );
-      } finally {
-        setLoading(false);
+      if (!token) {
+        throw new Error("Authentication token is required");
       }
-    };
 
+      const response = await fetch(
+        `${API_URL}/departments/company/${companyId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message || "Failed to load company details"
+        );
+      }
+
+      setCompany(data?.company || null);
+
+      setDepartments(
+        Array.isArray(data?.departments)
+          ? data.departments
+          : []
+      );
+    } catch (err) {
+      console.error("Company details error:", err);
+
+      setError(
+        err.message || "Failed to load company details"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (companyId) {
       loadCompany();
     }
   }, [companyId]);
 
+  // =====================================================
+  // NAVIGATION
+  // =====================================================
+
   const goTo = (path) => {
     setMobileMenuOpen(false);
-
     navigate(path);
   };
 
@@ -86,29 +107,234 @@ function CompanyDetailsPage() {
     navigate("/login");
   };
 
+  // =====================================================
+  // FORM
+  // =====================================================
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+
+    setForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  };
+
+  const openCreateModal = () => {
+    setEditingDepartment(null);
+
+    setForm({
+      name: "",
+      status: "ACTIVE",
+    });
+
+    setMessage("");
+
+    setShowModal(true);
+  };
+
+  const openEditModal = (department) => {
+    setEditingDepartment(department);
+
+    setForm({
+      name: department.name || "",
+      status: department.status || "ACTIVE",
+    });
+
+    setMessage("");
+
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    if (saving) return;
+
+    setShowModal(false);
+    setEditingDepartment(null);
+  };
+
+  // =====================================================
+  // CREATE / UPDATE
+  // =====================================================
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!form.name.trim()) {
+      setMessageType("error");
+      setMessage("Department name is required.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setMessage("");
+
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("Authentication token is required");
+      }
+
+      const isEditing = Boolean(editingDepartment);
+
+      const url = isEditing
+        ? `${API_URL}/departments/${editingDepartment.department_id}`
+        : `${API_URL}/departments`;
+
+      const method = isEditing ? "PUT" : "POST";
+
+      const body = isEditing
+        ? {
+            name: form.name.trim(),
+            status: form.status,
+          }
+        : {
+            name: form.name.trim(),
+            company_id: Number(companyId),
+            status: "ACTIVE",
+          };
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+            `Failed to ${
+              isEditing ? "update" : "create"
+            } department`
+        );
+      }
+
+      setShowModal(false);
+      setEditingDepartment(null);
+
+      setMessageType("success");
+      setMessage(
+        data?.message ||
+          `Department ${
+            isEditing ? "updated" : "created"
+          } successfully.`
+      );
+
+      await loadCompany();
+
+      setTimeout(() => {
+        setMessage("");
+      }, 3500);
+    } catch (err) {
+      console.error("Department save error:", err);
+
+      setMessageType("error");
+      setMessage(
+        err.message ||
+          "Something went wrong while saving the department."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // =====================================================
+  // DEACTIVATE
+  // =====================================================
+
+  const handleDeactivate = async (department) => {
+    const departmentName =
+      department.name || "this department";
+
+    const confirmed = window.confirm(
+      `Are you sure you want to deactivate "${departmentName}"?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setMessage("");
+
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("Authentication token is required");
+      }
+
+      const response = await fetch(
+        `${API_URL}/departments/${department.department_id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+            "Failed to deactivate department"
+        );
+      }
+
+      setMessageType("success");
+      setMessage(
+        data?.message ||
+          "Department deactivated successfully."
+      );
+
+      await loadCompany();
+
+      setTimeout(() => {
+        setMessage("");
+      }, 3500);
+    } catch (err) {
+      console.error(
+        "Department deactivate error:",
+        err
+      );
+
+      setMessageType("error");
+      setMessage(
+        err.message ||
+          "Failed to deactivate department."
+      );
+    }
+  };
+
+  // =====================================================
+  // RENDER
+  // =====================================================
+
   return (
     <div className="company-details-app">
 
-      {/* =================================================
-          MOBILE OVERLAY
-      ================================================= */}
+      {/* MOBILE OVERLAY */}
 
       {mobileMenuOpen && (
         <div
           className="company-details-mobile-overlay"
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={() =>
+            setMobileMenuOpen(false)
+          }
         />
       )}
 
-      {/* =================================================
-          MAIN SHELL
-      ================================================= */}
-
       <div className="company-details-shell">
 
-        {/* =================================================
-            SIDEBAR
-        ================================================= */}
+        {/* SIDEBAR */}
 
         <aside
           className={`company-details-sidebar ${
@@ -120,20 +346,13 @@ function CompanyDetailsPage() {
 
           <div className="company-details-sidebar-top">
 
-            {/* LOGO */}
-
             <div className="company-details-logo">
-
               <strong>
                 EMPLOYEE
                 <br />
                 MANAGEMENT SYSTEM
               </strong>
-
             </div>
-
-
-            {/* NAVIGATION */}
 
             <nav className="company-details-navigation">
 
@@ -154,11 +373,12 @@ function CompanyDetailsPage() {
                 </span>
               </button>
 
-
               <button
                 type="button"
                 className="company-details-nav-item"
-                onClick={() => goTo("/employees")}
+                onClick={() =>
+                  goTo("/employees")
+                }
               >
                 <span className="company-details-nav-icon">
                   <img
@@ -172,11 +392,12 @@ function CompanyDetailsPage() {
                 </span>
               </button>
 
-
               <button
                 type="button"
                 className="company-details-nav-item active"
-                onClick={() => goTo("/companies")}
+                onClick={() =>
+                  goTo("/companies")
+                }
               >
                 <span className="company-details-nav-icon">
                   <img
@@ -194,9 +415,6 @@ function CompanyDetailsPage() {
 
           </div>
 
-
-          {/* LOGOUT */}
-
           <div className="company-details-sidebar-bottom">
 
             <button
@@ -204,9 +422,7 @@ function CompanyDetailsPage() {
               className="company-details-logout"
               onClick={logout}
             >
-              <span>
-                ↪
-              </span>
+              <span>↪</span>
 
               <span>
                 Log out
@@ -217,16 +433,9 @@ function CompanyDetailsPage() {
 
         </aside>
 
-
-        {/* =================================================
-            MAIN CONTENT
-        ================================================= */}
+        {/* MAIN */}
 
         <main className="company-details-main">
-
-          {/* =================================================
-              TOPBAR
-          ================================================= */}
 
           <header className="company-details-topbar">
 
@@ -242,10 +451,7 @@ function CompanyDetailsPage() {
               {mobileMenuOpen ? "×" : "☰"}
             </button>
 
-
-            <div className="company-details-topbar-left">
-            </div>
-
+            <div className="company-details-topbar-left"></div>
 
             <div className="company-details-user">
 
@@ -261,7 +467,6 @@ function CompanyDetailsPage() {
 
               </div>
 
-
               <div className="company-details-avatar">
                 RN
               </div>
@@ -270,14 +475,7 @@ function CompanyDetailsPage() {
 
           </header>
 
-
-          {/* =================================================
-              PAGE CONTENT
-          ================================================= */}
-
           <div className="company-details-content">
-
-            {/* BACK */}
 
             <button
               type="button"
@@ -289,10 +487,7 @@ function CompanyDetailsPage() {
               ← Back to companies
             </button>
 
-
-            {/* =================================================
-                LOADING
-            ================================================= */}
+            {/* LOADING */}
 
             {loading && (
               <div className="company-details-state">
@@ -300,10 +495,7 @@ function CompanyDetailsPage() {
               </div>
             )}
 
-
-            {/* =================================================
-                ERROR
-            ================================================= */}
+            {/* ERROR */}
 
             {!loading && error && (
               <div className="company-details-state company-details-error">
@@ -311,17 +503,12 @@ function CompanyDetailsPage() {
               </div>
             )}
 
-
-            {/* =================================================
-                COMPANY
-            ================================================= */}
+            {/* COMPANY */}
 
             {!loading &&
               !error &&
               company && (
                 <>
-
-                  {/* HEADER */}
 
                   <section className="company-details-heading">
 
@@ -331,13 +518,11 @@ function CompanyDetailsPage() {
                         ORGANIZATION
                       </p>
 
-
                       <h1>
                         {company.name ||
                           company.company_name ||
                           "Company"}
                       </h1>
-
 
                       <p className="company-details-description">
                         Departments and employees
@@ -346,7 +531,6 @@ function CompanyDetailsPage() {
 
                     </div>
 
-
                     <div className="company-details-company-id">
                       Company ID:{" "}
                       {company.company_id}
@@ -354,10 +538,38 @@ function CompanyDetailsPage() {
 
                   </section>
 
+                  {/* MESSAGE */}
 
-                  {/* =================================================
-                      DEPARTMENTS
-                  ================================================= */}
+                  {message && (
+                    <div
+                      className={`company-details-message ${
+                        messageType === "error"
+                          ? "company-details-message-error"
+                          : "company-details-message-success"
+                      }`}
+                    >
+                      <span>
+                        {messageType === "error"
+                          ? "!"
+                          : "✓"}
+                      </span>
+
+                      <p>
+                        {message}
+                      </p>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setMessage("")
+                        }
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
+
+                  {/* DEPARTMENTS */}
 
                   <section className="company-details-section">
 
@@ -378,14 +590,40 @@ function CompanyDetailsPage() {
 
                       </div>
 
-                    </div>
+                      <button
+                        type="button"
+                        className="company-details-add-button"
+                        onClick={
+                          openCreateModal
+                        }
+                      >
+                        + Add department
+                      </button>
 
+                    </div>
 
                     {departments.length === 0 ? (
 
                       <div className="company-details-empty">
-                        No departments found for
-                        this company.
+                        <div>
+                          <strong>
+                            No departments yet
+                          </strong>
+
+                          <span>
+                            Create the first department
+                            for this company.
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={
+                              openCreateModal
+                            }
+                          >
+                            + Add department
+                          </button>
+                        </div>
                       </div>
 
                     ) : (
@@ -403,62 +641,94 @@ function CompanyDetailsPage() {
                               department.status ||
                               "ACTIVE";
 
-                            return (
+                            const isActive =
+                              String(status)
+                                .toUpperCase() ===
+                              "ACTIVE";
 
-                              <button
-                                type="button"
+                            return (
+                              <article
                                 key={
                                   department.department_id
                                 }
-                                className="company-details-department-card"
-                                onClick={() =>
-                                  navigate(
-                                    `/companies/${companyId}/departments/${department.department_id}`
-                                  )
-                                }
+                                className="company-details-department-card-wrapper"
                               >
 
-                                {/* ICON */}
+                                <button
+                                  type="button"
+                                  className="company-details-department-card"
+                                  onClick={() =>
+                                    navigate(
+                                      `/companies/${companyId}/departments/${department.department_id}`
+                                    )
+                                  }
+                                >
 
-                                <div className="company-details-department-icon">
+                                  <div className="company-details-department-icon">
+                                    {name
+                                      .charAt(0)
+                                      .toUpperCase()}
+                                  </div>
 
-                                  {name
-                                    .charAt(0)
-                                    .toUpperCase()}
+                                  <div className="company-details-department-info">
 
-                                </div>
+                                    <h3>
+                                      {name}
+                                    </h3>
 
+                                    <span
+                                      className={`company-details-status ${
+                                        isActive
+                                          ? "active"
+                                          : "inactive"
+                                      }`}
+                                    >
+                                      {formatStatus(
+                                        status
+                                      )}
+                                    </span>
 
-                                {/* INFO */}
+                                  </div>
 
-                                <div className="company-details-department-info">
-
-                                  <h3>
-                                    {name}
-                                  </h3>
-
-                                  <span
-                                    className={`company-details-status ${
-                                      String(status).toLowerCase() ===
-                                      "active"
-                                        ? "active"
-                                        : "inactive"
-                                    }`}
-                                  >
-                                    {status}
+                                  <span className="company-details-arrow">
+                                    →
                                   </span>
 
+                                </button>
+
+                                {/* CRUD */}
+
+                                <div className="company-details-department-actions">
+
+                                  <button
+                                    type="button"
+                                    className="company-details-edit-button"
+                                    onClick={() =>
+                                      openEditModal(
+                                        department
+                                      )
+                                    }
+                                  >
+                                    Edit
+                                  </button>
+
+                                  {isActive && (
+                                    <button
+                                      type="button"
+                                      className="company-details-deactivate-button"
+                                      onClick={() =>
+                                        handleDeactivate(
+                                          department
+                                        )
+                                      }
+                                    >
+                                      Deactivate
+                                    </button>
+                                  )}
+
                                 </div>
 
-
-                                {/* ARROW */}
-
-                                <span className="company-details-arrow">
-                                  →
-                                </span>
-
-                              </button>
-
+                              </article>
                             );
                           }
                         )}
@@ -478,8 +748,169 @@ function CompanyDetailsPage() {
 
       </div>
 
+      {/* =====================================================
+          DEPARTMENT MODAL
+      ===================================================== */}
+
+      {showModal && (
+        <div
+          className="company-details-modal-overlay"
+          onMouseDown={(event) => {
+            if (
+              event.target ===
+              event.currentTarget
+            ) {
+              closeModal();
+            }
+          }}
+        >
+
+          <div className="company-details-modal">
+
+            <div className="company-details-modal-header">
+
+              <div>
+
+                <p>
+                  {editingDepartment
+                    ? "EDIT DEPARTMENT"
+                    : "NEW DEPARTMENT"}
+                </p>
+
+                <h2>
+                  {editingDepartment
+                    ? "Edit department"
+                    : "Add department"}
+                </h2>
+
+                <span>
+                  {editingDepartment
+                    ? "Update the department information below."
+                    : "Create a department for this company."}
+                </span>
+
+              </div>
+
+              <button
+                type="button"
+                className="company-details-modal-close"
+                onClick={closeModal}
+                disabled={saving}
+              >
+                ×
+              </button>
+
+            </div>
+
+            <form
+              className="company-details-form"
+              onSubmit={handleSubmit}
+            >
+
+              <div className="company-details-form-field">
+
+                <label>
+                  Department name
+                  <span>*</span>
+                </label>
+
+                <input
+                  name="name"
+                  type="text"
+                  value={form.name}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Engineering"
+                  required
+                />
+
+              </div>
+
+              {editingDepartment && (
+                <div className="company-details-form-field">
+
+                  <label>
+                    Status
+                  </label>
+
+                  <select
+                    name="status"
+                    value={form.status}
+                    onChange={handleInputChange}
+                  >
+                    <option value="ACTIVE">
+                      Active
+                    </option>
+
+                    <option value="INACTIVE">
+                      Inactive
+                    </option>
+                  </select>
+
+                </div>
+              )}
+
+              <div className="company-details-form-company">
+
+                <span>
+                  Company
+                </span>
+
+                <strong>
+                  {company.name ||
+                    company.company_name}
+                </strong>
+
+              </div>
+
+              <div className="company-details-form-actions">
+
+                <button
+                  type="button"
+                  className="company-details-cancel-button"
+                  onClick={closeModal}
+                  disabled={saving}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="company-details-save-button"
+                  disabled={saving}
+                >
+                  {saving
+                    ? "Saving..."
+                    : editingDepartment
+                    ? "Save changes"
+                    : "Create department"}
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+      )}
+
     </div>
   );
+}
+
+
+// =====================================================
+// HELPERS
+// =====================================================
+
+function formatStatus(status) {
+  return String(status)
+    .toLowerCase()
+    .replace(/_/g, " ")
+    .replace(
+      /\b\w/g,
+      (char) => char.toUpperCase()
+    );
 }
 
 export default CompanyDetailsPage;

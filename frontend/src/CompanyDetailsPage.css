@@ -936,3 +936,710 @@
   }
 
 }
+
+
+/* =====================================================
+   DEPARTMENT CRUD
+===================================================== */
+
+.company-details-add-button {
+  flex-shrink: 0;
+
+  height: 34px;
+
+  padding: 0 13px;
+
+  border: 1px solid rgba(168, 76, 255, 0.25);
+  border-radius: 9px;
+
+  background: rgba(168, 76, 255, 0.08);
+
+  color: #c084fc;
+
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.company-details-add-button:hover {
+  background: rgba(168, 76, 255, 0.15);
+  border-color: rgba(168, 76, 255, 0.4);
+}
+
+
+/* =====================================================
+   DEPARTMENT CARD WRAPPER
+===================================================== */
+
+.company-details-department-card-wrapper {
+  min-width: 0;
+
+  padding: 0;
+
+  border-radius: 17px;
+
+  overflow: hidden;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.045);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(37, 40, 54, 0.9),
+      rgba(26, 29, 40, 0.82)
+    );
+}
+
+.company-details-department-card-wrapper
+  .company-details-department-card {
+  border: 0;
+
+  border-radius: 0;
+
+  background: transparent;
+
+  min-height: 105px;
+}
+
+.company-details-department-card-wrapper
+  .company-details-department-card:hover {
+  transform: none;
+
+  border: 0;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(43, 45, 62, 0.95),
+      rgba(27, 29, 41, 0.9)
+    );
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.company-details-department-actions {
+  display: flex;
+
+  gap: 7px;
+
+  padding: 0 16px 14px;
+}
+
+.company-details-edit-button,
+.company-details-deactivate-button {
+  flex: 1;
+
+  height: 29px;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 7px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.company-details-edit-button {
+  border:
+    1px solid rgba(168, 76, 255, 0.18);
+
+  background:
+    rgba(168, 76, 255, 0.06);
+
+  color: #b879ff;
+}
+
+.company-details-edit-button:hover {
+  border-color:
+    rgba(168, 76, 255, 0.35);
+
+  background:
+    rgba(168, 76, 255, 0.13);
+}
+
+.company-details-deactivate-button {
+  border:
+    1px solid rgba(255, 90, 100, 0.13);
+
+  background:
+    rgba(255, 90, 100, 0.045);
+
+  color: #dc777e;
+}
+
+.company-details-deactivate-button:hover {
+  border-color:
+    rgba(255, 90, 100, 0.3);
+
+  background:
+    rgba(255, 90, 100, 0.09);
+
+  color: #ff858d;
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+.company-details-message {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  width: 100%;
+
+  min-height: 40px;
+
+  margin-bottom: 18px;
+
+  padding: 8px 11px;
+
+  border-radius: 10px;
+
+  font-size: 8px;
+}
+
+.company-details-message > span {
+  display: grid;
+
+  place-items: center;
+
+  width: 21px;
+  height: 21px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.company-details-message p {
+  flex: 1;
+
+  margin: 0;
+}
+
+.company-details-message button {
+  width: 24px;
+  height: 24px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: inherit;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+.company-details-message-success {
+  border:
+    1px solid rgba(67, 210, 145, 0.14);
+
+  background:
+    rgba(67, 210, 145, 0.055);
+
+  color: #70d9aa;
+}
+
+.company-details-message-success > span {
+  background:
+    rgba(67, 210, 145, 0.12);
+
+  color: #55d99b;
+}
+
+.company-details-message-error {
+  border:
+    1px solid rgba(255, 90, 100, 0.14);
+
+  background:
+    rgba(255, 90, 100, 0.055);
+
+  color: #ff858d;
+}
+
+.company-details-message-error > span {
+  background:
+    rgba(255, 90, 100, 0.12);
+
+  color: #ff777f;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.company-details-empty > div {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 7px;
+
+  text-align: center;
+}
+
+.company-details-empty strong {
+  color: #dfe1e7;
+
+  font-size: 11px;
+}
+
+.company-details-empty span {
+  color: #686f7e;
+
+  font-size: 8px;
+}
+
+.company-details-empty button {
+  margin-top: 5px;
+
+  height: 31px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(168, 76, 255, 0.2);
+  border-radius: 8px;
+
+  background: rgba(168, 76, 255, 0.07);
+
+  color: #b879ff;
+
+  font-family: inherit;
+  font-size: 7px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.company-details-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    rgba(3, 5, 10, 0.72);
+
+  backdrop-filter: blur(9px);
+}
+
+.company-details-modal {
+  width: min(470px, 100%);
+
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.07);
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(30, 33, 45, 0.98),
+      rgba(14, 17, 25, 0.99)
+    );
+
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.6);
+
+  animation:
+    company-details-modal-in 0.2s ease;
+}
+
+@keyframes company-details-modal-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(8px)
+      scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =====================================================
+   MODAL HEADER
+===================================================== */
+
+.company-details-modal-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 22px 23px 18px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.045);
+}
+
+.company-details-modal-header p {
+  margin: 0 0 6px;
+
+  color: #a85cff;
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 1.7px;
+}
+
+.company-details-modal-header h2 {
+  margin: 0;
+
+  color: #f0f1f5;
+
+  font-size: 19px;
+  font-weight: 650;
+}
+
+.company-details-modal-header span {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #6e7585;
+
+  font-size: 8px;
+}
+
+.company-details-modal-close {
+  display: grid;
+
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.05);
+
+  border-radius: 9px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #777e8d;
+
+  font-size: 17px;
+
+  cursor: pointer;
+}
+
+.company-details-modal-close:hover {
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.company-details-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+
+  padding: 21px 23px 23px;
+}
+
+.company-details-form-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.company-details-form-field label {
+  color: #999fad;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.company-details-form-field label span {
+  margin-left: 3px;
+
+  color: #b65cff;
+}
+
+.company-details-form-field input,
+.company-details-form-field select {
+  width: 100%;
+  height: 39px;
+
+  padding: 0 11px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background:
+    rgba(0, 0, 0, 0.17);
+
+  color: #e5e7eb;
+
+  font-family: inherit;
+  font-size: 9px;
+}
+
+.company-details-form-field input::placeholder {
+  color: #555c6b;
+}
+
+.company-details-form-field input:focus,
+.company-details-form-field select:focus {
+  border-color:
+    rgba(168, 76, 255, 0.4);
+
+  background:
+    rgba(168, 76, 255, 0.025);
+}
+
+.company-details-form-field select {
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   COMPANY DISPLAY
+===================================================== */
+
+.company-details-form-company {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 11px 12px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.045);
+
+  border-radius: 10px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+}
+
+.company-details-form-company span {
+  color: #676e7d;
+
+  font-size: 7px;
+}
+
+.company-details-form-company strong {
+  color: #dfe1e7;
+
+  font-size: 9px;
+}
+
+
+/* =====================================================
+   FORM ACTIONS
+===================================================== */
+
+.company-details-form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  padding-top: 16px;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.045);
+}
+
+.company-details-cancel-button,
+.company-details-save-button {
+  height: 37px;
+
+  padding: 0 15px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.company-details-cancel-button {
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #858b9b;
+}
+
+.company-details-cancel-button:hover {
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+}
+
+.company-details-save-button {
+  border:
+    1px solid rgba(168, 76, 255, 0.35);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(168, 76, 255, 0.8),
+      rgba(116, 48, 191, 0.75)
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 25px
+    rgba(128, 52, 200, 0.18);
+}
+
+.company-details-save-button:hover {
+  filter: brightness(1.08);
+}
+
+.company-details-save-button:disabled,
+.company-details-cancel-button:disabled,
+.company-details-modal-close:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   MOBILE CRUD
+===================================================== */
+
+@media (max-width: 800px) {
+
+  .company-details-section-header {
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .company-details-add-button {
+    flex-shrink: 0;
+  }
+
+  .company-details-modal-overlay {
+    align-items: flex-end;
+
+    padding: 10px;
+  }
+
+  .company-details-modal {
+    max-height: calc(100vh - 20px);
+
+    border-radius: 18px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .company-details-section-header {
+    flex-direction: column;
+  }
+
+  .company-details-add-button {
+    width: 100%;
+  }
+
+  .company-details-modal-header {
+    padding: 19px 18px 16px;
+  }
+
+  .company-details-form {
+    padding: 18px;
+  }
+
+  .company-details-form-actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .company-details-cancel-button,
+  .company-details-save-button {
+    width: 100%;
+  }
+
+}

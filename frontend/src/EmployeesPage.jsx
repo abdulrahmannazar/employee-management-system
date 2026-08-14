@@ -40,16 +40,51 @@ function EmployeesPage() {
     per_page: 10,
   });
 
-  /*
-   * Load companies
-   */
+  // =====================================================
+  // CRUD STATE
+  // =====================================================
+
+  const [showEmployeeModal, setShowEmployeeModal] =
+    useState(false);
+
+  const [savingEmployee, setSavingEmployee] =
+    useState(false);
+
+  const [editingEmployee, setEditingEmployee] =
+    useState(null);
+
+  const [crudMessage, setCrudMessage] = useState("");
+  const [crudMessageType, setCrudMessageType] =
+    useState("success");
+
+  const emptyEmployeeForm = {
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    company_id: "",
+    department_id: "",
+    manager_id: "",
+    joining_date: "",
+    status: "ACTIVE",
+  };
+
+  const [employeeForm, setEmployeeForm] =
+    useState(emptyEmployeeForm);
+
+  // =====================================================
+  // LOAD COMPANIES
+  // =====================================================
+
   useEffect(() => {
     const loadCompanies = async () => {
       try {
         const token = localStorage.getItem("token");
 
         if (!token) {
-          throw new Error("Authentication token is required");
+          throw new Error(
+            "Authentication token is required"
+          );
         }
 
         const response = await fetch(
@@ -66,7 +101,8 @@ function EmployeesPage() {
 
         if (!response.ok) {
           throw new Error(
-            data?.message || "Failed to load companies"
+            data?.message ||
+              "Failed to load companies"
           );
         }
 
@@ -80,23 +116,29 @@ function EmployeesPage() {
 
         setCompanies(companyList);
       } catch (err) {
-        console.error("Companies error:", err);
+        console.error(
+          "Companies error:",
+          err
+        );
       }
     };
 
     loadCompanies();
   }, []);
 
-  /*
-   * Load departments
-   */
+  // =====================================================
+  // LOAD DEPARTMENTS
+  // =====================================================
+
   useEffect(() => {
     const loadDepartments = async () => {
       try {
         const token = localStorage.getItem("token");
 
         if (!token) {
-          throw new Error("Authentication token is required");
+          throw new Error(
+            "Authentication token is required"
+          );
         }
 
         const response = await fetch(
@@ -113,7 +155,8 @@ function EmployeesPage() {
 
         if (!response.ok) {
           throw new Error(
-            data?.message || "Failed to load departments"
+            data?.message ||
+              "Failed to load departments"
           );
         }
 
@@ -127,16 +170,20 @@ function EmployeesPage() {
 
         setDepartments(departmentList);
       } catch (err) {
-        console.error("Departments error:", err);
+        console.error(
+          "Departments error:",
+          err
+        );
       }
     };
 
     loadDepartments();
   }, []);
 
-  /*
-   * Load employees
-   */
+  // =====================================================
+  // LOAD EMPLOYEES
+  // =====================================================
+
   useEffect(() => {
     const loadEmployees = async () => {
       try {
@@ -146,32 +193,45 @@ function EmployeesPage() {
         const token = localStorage.getItem("token");
 
         if (!token) {
-          throw new Error("Authentication token is required");
+          throw new Error(
+            "Authentication token is required"
+          );
         }
 
         const params = new URLSearchParams();
 
-        params.set("page", page);
-        params.set("limit", limit);
-
         if (search.trim()) {
-          params.set("search", search.trim());
+          params.set(
+            "search",
+            search.trim()
+          );
         }
 
         if (companyId) {
-          params.set("company_id", companyId);
+          params.set(
+            "company_id",
+            companyId
+          );
         }
 
         if (departmentId) {
-          params.set("department_id", departmentId);
+          params.set(
+            "department_id",
+            departmentId
+          );
         }
 
         if (status) {
-          params.set("status", status);
+          params.set(
+            "status",
+            status
+          );
         }
 
-        params.set("sort_by", sortBy);
-        params.set("sort_order", sortOrder);
+        params.set("sort", sortBy);
+        params.set("order", sortOrder);
+        params.set("page", page);
+        params.set("limit", limit);
 
         const response = await fetch(
           `${API_URL}/employees?${params.toString()}`,
@@ -187,7 +247,8 @@ function EmployeesPage() {
 
         if (!response.ok) {
           throw new Error(
-            data?.message || "Failed to load employees"
+            data?.message ||
+              "Failed to load employees"
           );
         }
 
@@ -206,10 +267,14 @@ function EmployeesPage() {
           }
         );
       } catch (err) {
-        console.error("Employees error:", err);
+        console.error(
+          "Employees error:",
+          err
+        );
 
         setError(
-          err.message || "Failed to load employees"
+          err.message ||
+            "Failed to load employees"
         );
 
         setEmployees([]);
@@ -230,9 +295,10 @@ function EmployeesPage() {
     sortOrder,
   ]);
 
-  /*
-   * Reset page when filters change
-   */
+  // =====================================================
+  // RESET PAGE WHEN FILTERS CHANGE
+  // =====================================================
+
   useEffect(() => {
     setPage(1);
   }, [
@@ -244,23 +310,61 @@ function EmployeesPage() {
     sortOrder,
   ]);
 
-  /*
-   * Only show departments belonging to selected company
-   */
+  // =====================================================
+  // VISIBLE DEPARTMENTS
+  // =====================================================
+
   const visibleDepartments = useMemo(() => {
+    if (!employeeForm.company_id) {
+      return departments;
+    }
+
+    return departments.filter(
+      (department) => {
+        const departmentCompanyId =
+          department.company_id ??
+          department.companyId;
+
+        return (
+          String(departmentCompanyId) ===
+          String(employeeForm.company_id)
+        );
+      }
+    );
+  }, [
+    departments,
+    employeeForm.company_id,
+  ]);
+
+  // =====================================================
+  // FILTER DEPARTMENTS
+  // =====================================================
+
+  const filterDepartments = useMemo(() => {
     if (!companyId) {
       return departments;
     }
 
-    return departments.filter((department) => {
-      const departmentCompanyId =
-        department.company_id ??
-        department.companyId;
+    return departments.filter(
+      (department) => {
+        const departmentCompanyId =
+          department.company_id ??
+          department.companyId;
 
-      return String(departmentCompanyId) ===
-        String(companyId);
-    });
-  }, [departments, companyId]);
+        return (
+          String(departmentCompanyId) ===
+          String(companyId)
+        );
+      }
+    );
+  }, [
+    departments,
+    companyId,
+  ]);
+
+  // =====================================================
+  // NAVIGATION
+  // =====================================================
 
   const goTo = (path) => {
     setMobileMenuOpen(false);
@@ -272,13 +376,12 @@ function EmployeesPage() {
     navigate("/login");
   };
 
+  // =====================================================
+  // FILTER HANDLERS
+  // =====================================================
+
   const handleCompanyChange = (value) => {
     setCompanyId(value);
-
-    /*
-     * Department may no longer belong to the
-     * newly selected company.
-     */
     setDepartmentId("");
   };
 
@@ -342,31 +445,441 @@ function EmployeesPage() {
     setPage(1);
   };
 
+  // =====================================================
+  // FORM
+  // =====================================================
+
+  const handleEmployeeFormChange = (
+    event
+  ) => {
+    const {
+      name,
+      value,
+    } = event.target;
+
+    setEmployeeForm(
+      (current) => ({
+        ...current,
+        [name]: value,
+        ...(name === "company_id"
+          ? {
+              department_id: "",
+              manager_id: "",
+            }
+          : {}),
+      })
+    );
+  };
+
+  const openCreateEmployee = () => {
+    setEditingEmployee(null);
+
+    setEmployeeForm(
+      emptyEmployeeForm
+    );
+
+    setCrudMessage("");
+
+    setShowEmployeeModal(true);
+  };
+
+  const openEditEmployee = (
+    employee
+  ) => {
+    setEditingEmployee(employee);
+
+    setEmployeeForm({
+      first_name:
+        employee.first_name || "",
+      last_name:
+        employee.last_name || "",
+      email:
+        employee.email || "",
+      phone:
+        employee.phone || "",
+      company_id:
+        employee.company_id
+          ? String(employee.company_id)
+          : "",
+      department_id:
+        employee.department_id
+          ? String(
+              employee.department_id
+            )
+          : "",
+      manager_id:
+        employee.manager_id
+          ? String(employee.manager_id)
+          : "",
+      joining_date:
+        employee.joining_date
+          ? String(
+              employee.joining_date
+            ).split("T")[0]
+          : "",
+      status:
+        employee.status || "ACTIVE",
+    });
+
+    setCrudMessage("");
+
+    setShowEmployeeModal(true);
+  };
+
+  const closeEmployeeModal = () => {
+    if (savingEmployee) {
+      return;
+    }
+
+    setShowEmployeeModal(false);
+    setEditingEmployee(null);
+  };
+
+  // =====================================================
+  // CREATE / UPDATE EMPLOYEE
+  // =====================================================
+
+  const handleEmployeeSubmit = async (
+    event
+  ) => {
+    event.preventDefault();
+
+    setCrudMessage("");
+
+    if (
+      !employeeForm.first_name.trim() ||
+      !employeeForm.last_name.trim() ||
+      !employeeForm.email.trim()
+    ) {
+      setCrudMessageType("error");
+      setCrudMessage(
+        "First name, last name and email are required."
+      );
+      return;
+    }
+
+    if (
+      !employeeForm.company_id ||
+      !employeeForm.department_id
+    ) {
+      setCrudMessageType("error");
+      setCrudMessage(
+        "Company and department are required."
+      );
+      return;
+    }
+
+    if (!employeeForm.joining_date) {
+      setCrudMessageType("error");
+      setCrudMessage(
+        "Joining date is required."
+      );
+      return;
+    }
+
+    const today =
+      new Date()
+        .toISOString()
+        .split("T")[0];
+
+    if (
+      employeeForm.joining_date >
+      today
+    ) {
+      setCrudMessageType("error");
+      setCrudMessage(
+        "Joining date cannot be in the future."
+      );
+      return;
+    }
+
+    try {
+      setSavingEmployee(true);
+
+      const token =
+        localStorage.getItem(
+          "token"
+        );
+
+      if (!token) {
+        throw new Error(
+          "Authentication token is required"
+        );
+      }
+
+      const isEditing =
+        Boolean(editingEmployee);
+
+      const url = isEditing
+        ? `${API_URL}/employees/${editingEmployee.employee_id}`
+        : `${API_URL}/employees`;
+
+      const method = isEditing
+        ? "PUT"
+        : "POST";
+
+      const body = {
+        first_name:
+          employeeForm.first_name.trim(),
+
+        last_name:
+          employeeForm.last_name.trim(),
+
+        email:
+          employeeForm.email.trim(),
+
+        phone:
+          employeeForm.phone.trim(),
+
+        company_id:
+          Number(
+            employeeForm.company_id
+          ),
+
+        department_id:
+          Number(
+            employeeForm.department_id
+          ),
+
+        manager_id:
+          employeeForm.manager_id
+            ? Number(
+                employeeForm.manager_id
+              )
+            : null,
+
+        joining_date:
+          employeeForm.joining_date,
+
+        status:
+          employeeForm.status,
+      };
+
+      const response =
+        await fetch(url, {
+          method,
+
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify(
+            body
+          ),
+        });
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+            `Failed to ${
+              isEditing
+                ? "update"
+                : "create"
+            } employee`
+        );
+      }
+
+      setShowEmployeeModal(
+        false
+      );
+
+      setEditingEmployee(null);
+
+      setCrudMessageType(
+        "success"
+      );
+
+      setCrudMessage(
+        data?.message ||
+          `Employee ${
+            isEditing
+              ? "updated"
+              : "created"
+          } successfully.`
+      );
+
+      /*
+       * Reload current page.
+       */
+      setPage(
+        (current) => current
+      );
+
+      // Small delay so the current
+      // page reloads naturally.
+      window.setTimeout(
+        () => {
+          window.location.reload();
+        },
+        400
+      );
+    } catch (err) {
+      console.error(
+        "Employee save error:",
+        err
+      );
+
+      setCrudMessageType(
+        "error"
+      );
+
+      setCrudMessage(
+        err.message ||
+          "Failed to save employee."
+      );
+    } finally {
+      setSavingEmployee(false);
+    }
+  };
+
+  // =====================================================
+  // TERMINATE EMPLOYEE
+  // =====================================================
+
+  const handleTerminateEmployee = async (
+    employee
+  ) => {
+    const fullName =
+      `${employee.first_name || ""} ${
+        employee.last_name || ""
+      }`.trim();
+
+    const confirmed =
+      window.confirm(
+        `Are you sure you want to terminate ${
+          fullName ||
+          "this employee"
+        }?`
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const token =
+        localStorage.getItem(
+          "token"
+        );
+
+      if (!token) {
+        throw new Error(
+          "Authentication token is required"
+        );
+      }
+
+      const response =
+        await fetch(
+          `${API_URL}/employees/${employee.employee_id}`,
+          {
+            method: "DELETE",
+
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type":
+                "application/json",
+            },
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+            "Failed to terminate employee"
+        );
+      }
+
+      setCrudMessageType(
+        "success"
+      );
+
+      setCrudMessage(
+        data?.message ||
+          "Employee terminated successfully."
+      );
+
+      /*
+       * Reload the employee
+       * directory.
+       */
+      window.setTimeout(
+        () => {
+          window.location.reload();
+        },
+        400
+      );
+    } catch (err) {
+      console.error(
+        "Terminate employee error:",
+        err
+      );
+
+      setCrudMessageType(
+        "error"
+      );
+
+      setCrudMessage(
+        err.message ||
+          "Failed to terminate employee."
+      );
+    }
+  };
+
+  // =====================================================
+  // HELPERS
+  // =====================================================
+
   const formatDate = (date) => {
-    if (!date) return "—";
-
-    const parsed = new Date(date);
-
-    if (Number.isNaN(parsed.getTime())) {
+    if (!date) {
       return "—";
     }
 
-    return parsed.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    const parsed =
+      new Date(date);
+
+    if (
+      Number.isNaN(
+        parsed.getTime()
+      )
+    ) {
+      return "—";
+    }
+
+    return parsed.toLocaleDateString(
+      "en-US",
+      {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }
+    );
   };
 
-  const getInitials = (employee) => {
+  const getInitials = (
+    employee
+  ) => {
     const first =
-      employee.first_name?.charAt(0) || "";
+      employee.first_name
+        ?.charAt(0) || "";
 
     const last =
-      employee.last_name?.charAt(0) || "";
+      employee.last_name
+        ?.charAt(0) || "";
 
     return `${first}${last}`.toUpperCase();
   };
+
+  // =====================================================
+  // RENDER
+  // =====================================================
 
   return (
     <div className="employees-app">
@@ -375,7 +888,9 @@ function EmployeesPage() {
         <div
           className="employees-mobile-overlay"
           onClick={() =>
-            setMobileMenuOpen(false)
+            setMobileMenuOpen(
+              false
+            )
           }
         />
       )}
@@ -391,6 +906,7 @@ function EmployeesPage() {
               : ""
           }`}
         >
+
           <div className="employees-sidebar-top">
 
             <div className="employees-logo">
@@ -406,7 +922,9 @@ function EmployeesPage() {
               <button
                 type="button"
                 className="employees-nav-item"
-                onClick={() => goTo("/")}
+                onClick={() =>
+                  goTo("/")
+                }
               >
                 <span className="employees-nav-icon">
                   <img
@@ -453,6 +971,7 @@ function EmployeesPage() {
               </button>
 
             </nav>
+
           </div>
 
           <div className="employees-sidebar-bottom">
@@ -463,17 +982,18 @@ function EmployeesPage() {
               onClick={logout}
             >
               <span>↪</span>
-              <span>Log out</span>
+              <span>
+                Log out
+              </span>
             </button>
 
           </div>
+
         </aside>
 
         {/* MAIN */}
 
         <main className="employees-main">
-
-          {/* TOPBAR */}
 
           <header className="employees-topbar">
 
@@ -486,14 +1006,17 @@ function EmployeesPage() {
                 )
               }
             >
-              {mobileMenuOpen ? "×" : "☰"}
+              {mobileMenuOpen
+                ? "×"
+                : "☰"}
             </button>
 
-            <div className="employees-topbar-spacer" />
+            <div className="employees-topbar-left"></div>
 
             <div className="employees-user">
 
               <div className="employees-user-info">
+
                 <strong>
                   Rahma Nizer
                 </strong>
@@ -501,6 +1024,7 @@ function EmployeesPage() {
                 <small>
                   Administrator
                 </small>
+
               </div>
 
               <div className="employees-avatar">
@@ -511,15 +1035,16 @@ function EmployeesPage() {
 
           </header>
 
-          {/* CONTENT */}
-
           <div className="employees-content">
 
-            <div className="employees-page-heading">
+            {/* PAGE HEADER */}
+
+            <section className="employees-heading">
 
               <div>
-                <p className="employees-page-label">
-                  DIRECTORY
+
+                <p className="employees-label">
+                  EMPLOYEE DIRECTORY
                 </p>
 
                 <h1>
@@ -527,53 +1052,89 @@ function EmployeesPage() {
                 </h1>
 
                 <p>
-                  Manage and view employees
-                  across all companies.
+                  Manage employees across
+                  all companies and
+                  departments.
                 </p>
+
               </div>
 
-              <div className="employees-total">
-                <strong>
-                  {pagination.total_items}
-                </strong>
+              <button
+                type="button"
+                className="employees-add-button"
+                onClick={
+                  openCreateEmployee
+                }
+              >
+                + Add employee
+              </button>
 
+            </section>
+
+            {/* CRUD MESSAGE */}
+
+            {crudMessage && (
+              <div
+                className={`employees-crud-message ${
+                  crudMessageType ===
+                  "error"
+                    ? "error"
+                    : "success"
+                }`}
+              >
                 <span>
-                  Total employees
+                  {crudMessageType ===
+                  "error"
+                    ? "!"
+                    : "✓"}
                 </span>
+
+                <p>
+                  {crudMessage}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCrudMessage(
+                      ""
+                    )
+                  }
+                >
+                  ×
+                </button>
               </div>
+            )}
 
-            </div>
-
-            {/* FILTER BAR */}
+            {/* FILTERS */}
 
             <section className="employees-filter-card">
 
-              <div className="employees-search">
-
-                <span className="employees-search-icon">
-                  ⌕
-                </span>
+              <div className="employees-search-wrapper">
 
                 <input
                   type="text"
-                  placeholder="Search employees by name or email"
                   value={search}
                   onChange={(event) =>
                     setSearch(
-                      event.target.value
+                      event.target
+                        .value
                     )
                   }
+                  placeholder="Search employees by name or email"
+                  className="employees-search"
                 />
 
               </div>
 
-              <div className="employees-filter-row">
+              <div className="employees-filters">
 
                 <select
                   value={companyId}
                   onChange={(event) =>
                     handleCompanyChange(
-                      event.target.value
+                      event.target
+                        .value
                     )
                   }
                 >
@@ -585,16 +1146,13 @@ function EmployeesPage() {
                     (company) => (
                       <option
                         key={
-                          company.company_id ??
-                          company.id
+                          company.company_id
                         }
                         value={
-                          company.company_id ??
-                          company.id
+                          company.company_id
                         }
                       >
-                        {company.company_name ??
-                          company.name}
+                        {company.name}
                       </option>
                     )
                   )}
@@ -604,7 +1162,8 @@ function EmployeesPage() {
                   value={departmentId}
                   onChange={(event) =>
                     setDepartmentId(
-                      event.target.value
+                      event.target
+                        .value
                     )
                   }
                 >
@@ -612,20 +1171,17 @@ function EmployeesPage() {
                     All departments
                   </option>
 
-                  {visibleDepartments.map(
+                  {filterDepartments.map(
                     (department) => (
                       <option
                         key={
-                          department.department_id ??
-                          department.id
+                          department.department_id
                         }
                         value={
-                          department.department_id ??
-                          department.id
+                          department.department_id
                         }
                       >
-                        {department.department_name ??
-                          department.name}
+                        {department.name}
                       </option>
                     )
                   )}
@@ -635,7 +1191,8 @@ function EmployeesPage() {
                   value={status}
                   onChange={(event) =>
                     setStatus(
-                      event.target.value
+                      event.target
+                        .value
                     )
                   }
                 >
@@ -656,7 +1213,8 @@ function EmployeesPage() {
                   value={currentSort()}
                   onChange={(event) =>
                     handleSortChange(
-                      event.target.value
+                      event.target
+                        .value
                     )
                   }
                 >
@@ -680,7 +1238,9 @@ function EmployeesPage() {
                 <button
                   type="button"
                   className="employees-clear-button"
-                  onClick={clearFilters}
+                  onClick={
+                    clearFilters
+                  }
                 >
                   Clear
                 </button>
@@ -695,21 +1255,25 @@ function EmployeesPage() {
               </div>
             )}
 
-            {/* TABLE */}
+            {/* EMPLOYEE TABLE */}
 
             <section className="employees-list-card">
 
               <div className="employees-list-header">
 
                 <div>
+
                   <h2>
                     Employee Directory
                   </h2>
 
                   <p>
-                    {pagination.total_items}{" "}
+                    {
+                      pagination.total_items
+                    }{" "}
                     employees found
                   </p>
+
                 </div>
 
               </div>
@@ -720,11 +1284,13 @@ function EmployeesPage() {
                   Loading employees...
                 </div>
 
-              ) : employees.length === 0 ? (
+              ) : employees.length ===
+                0 ? (
 
                 <div className="employees-state">
 
                   <div>
+
                     <strong>
                       No employees found
                     </strong>
@@ -733,6 +1299,7 @@ function EmployeesPage() {
                       Try changing your
                       search or filters.
                     </p>
+
                   </div>
 
                 </div>
@@ -744,14 +1311,33 @@ function EmployeesPage() {
                   <table className="employees-table">
 
                     <thead>
+
                       <tr>
-                        <th>Employee</th>
-                        <th>Company</th>
-                        <th>Department</th>
-                        <th>Status</th>
-                        <th>Joining Date</th>
-                        <th></th>
+                        <th>
+                          Employee
+                        </th>
+
+                        <th>
+                          Company
+                        </th>
+
+                        <th>
+                          Department
+                        </th>
+
+                        <th>
+                          Status
+                        </th>
+
+                        <th>
+                          Joining Date
+                        </th>
+
+                        <th>
+                          Actions
+                        </th>
                       </tr>
+
                     </thead>
 
                     <tbody>
@@ -789,6 +1375,7 @@ function EmployeesPage() {
                                   </div>
 
                                   <div>
+
                                     <strong>
                                       {
                                         employee.first_name
@@ -803,6 +1390,7 @@ function EmployeesPage() {
                                         employee.email
                                       }
                                     </small>
+
                                   </div>
 
                                 </div>
@@ -813,7 +1401,7 @@ function EmployeesPage() {
                                 <span className="employees-company-name">
                                   {
                                     employee.company_name ||
-                                      "—"
+                                    "—"
                                   }
                                 </span>
                               </td>
@@ -821,7 +1409,7 @@ function EmployeesPage() {
                               <td>
                                 {
                                   employee.department_name ||
-                                    "—"
+                                  "—"
                                 }
                               </td>
 
@@ -836,7 +1424,7 @@ function EmployeesPage() {
                                 >
                                   {
                                     employee.status ||
-                                      "—"
+                                    "—"
                                   }
                                 </span>
 
@@ -850,21 +1438,59 @@ function EmployeesPage() {
 
                               <td>
 
-                                <button
-                                  type="button"
-                                  className="employees-view-button"
-                                  onClick={(
-                                    event
-                                  ) => {
-                                    event.stopPropagation();
+                                <div className="employees-row-actions">
 
-                                    navigate(
-                                      `/employees/${employee.employee_id}`
-                                    );
-                                  }}
-                                >
-                                  View
-                                </button>
+                                  <button
+                                    type="button"
+                                    className="employees-edit-button"
+                                    onClick={(
+                                      event
+                                    ) => {
+                                      event.stopPropagation();
+
+                                      openEditEmployee(
+                                        employee
+                                      );
+                                    }}
+                                  >
+                                    Edit
+                                  </button>
+
+                                  {active && (
+                                    <button
+                                      type="button"
+                                      className="employees-terminate-button"
+                                      onClick={(
+                                        event
+                                      ) => {
+                                        event.stopPropagation();
+
+                                        handleTerminateEmployee(
+                                          employee
+                                        );
+                                      }}
+                                    >
+                                      Terminate
+                                    </button>
+                                  )}
+
+                                  <button
+                                    type="button"
+                                    className="employees-view-button"
+                                    onClick={(
+                                      event
+                                    ) => {
+                                      event.stopPropagation();
+
+                                      navigate(
+                                        `/employees/${employee.employee_id}`
+                                      );
+                                    }}
+                                  >
+                                    View
+                                  </button>
+
+                                </div>
 
                               </td>
 
@@ -883,7 +1509,8 @@ function EmployeesPage() {
               {/* PAGINATION */}
 
               {!loading &&
-                pagination.total_pages > 1 && (
+                pagination.total_pages >
+                  1 && (
 
                   <div className="employees-pagination">
 
@@ -916,7 +1543,10 @@ function EmployeesPage() {
                           index + 1
                       )
                         .filter(
-                          (pageNumber) => {
+                          (
+                            pageNumber
+                          ) => {
+
                             if (
                               pagination.total_pages <=
                               7
@@ -937,7 +1567,10 @@ function EmployeesPage() {
                           }
                         )
                         .map(
-                          (pageNumber) => (
+                          (
+                            pageNumber
+                          ) => (
+
                             <button
                               key={
                                 pageNumber
@@ -959,6 +1592,7 @@ function EmployeesPage() {
                                 pageNumber
                               }
                             </button>
+
                           )
                         )}
 
@@ -991,6 +1625,424 @@ function EmployeesPage() {
           </div>
         </main>
       </div>
+
+      {/* =====================================================
+          EMPLOYEE MODAL
+      ===================================================== */}
+
+      {showEmployeeModal && (
+
+        <div
+          className="employees-modal-overlay"
+          onMouseDown={(
+            event
+          ) => {
+
+            if (
+              event.target ===
+              event.currentTarget
+            ) {
+              closeEmployeeModal();
+            }
+
+          }}
+        >
+
+          <div className="employees-modal">
+
+            <div className="employees-modal-header">
+
+              <div>
+
+                <p>
+                  {editingEmployee
+                    ? "EDIT EMPLOYEE"
+                    : "NEW EMPLOYEE"}
+                </p>
+
+                <h2>
+                  {editingEmployee
+                    ? "Edit employee"
+                    : "Add employee"}
+                </h2>
+
+                <span>
+                  Enter the employee
+                  information below.
+                </span>
+
+              </div>
+
+              <button
+                type="button"
+                className="employees-modal-close"
+                onClick={
+                  closeEmployeeModal
+                }
+                disabled={
+                  savingEmployee
+                }
+              >
+                ×
+              </button>
+
+            </div>
+
+            <form
+              className="employees-form"
+              onSubmit={
+                handleEmployeeSubmit
+              }
+            >
+
+              <div className="employees-form-grid">
+
+                <div className="employees-form-field">
+
+                  <label>
+                    First name *
+                  </label>
+
+                  <input
+                    name="first_name"
+                    value={
+                      employeeForm.first_name
+                    }
+                    onChange={
+                      handleEmployeeFormChange
+                    }
+                    placeholder="First name"
+                    required
+                  />
+
+                </div>
+
+                <div className="employees-form-field">
+
+                  <label>
+                    Last name *
+                  </label>
+
+                  <input
+                    name="last_name"
+                    value={
+                      employeeForm.last_name
+                    }
+                    onChange={
+                      handleEmployeeFormChange
+                    }
+                    placeholder="Last name"
+                    required
+                  />
+
+                </div>
+
+                <div className="employees-form-field employees-form-full">
+
+                  <label>
+                    Email *
+                  </label>
+
+                  <input
+                    type="email"
+                    name="email"
+                    value={
+                      employeeForm.email
+                    }
+                    onChange={
+                      handleEmployeeFormChange
+                    }
+                    placeholder="employee@example.com"
+                    required
+                  />
+
+                </div>
+
+                <div className="employees-form-field">
+
+                  <label>
+                    Phone
+                  </label>
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={
+                      employeeForm.phone
+                    }
+                    onChange={
+                      handleEmployeeFormChange
+                    }
+                    placeholder="Phone number"
+                  />
+
+                </div>
+
+                <div className="employees-form-field">
+
+                  <label>
+                    Joining date *
+                  </label>
+
+                  <input
+                    type="date"
+                    name="joining_date"
+                    value={
+                      employeeForm.joining_date
+                    }
+                    onChange={
+                      handleEmployeeFormChange
+                    }
+                    max={
+                      new Date()
+                        .toISOString()
+                        .split("T")[0]
+                    }
+                    required
+                  />
+
+                </div>
+
+                <div className="employees-form-field">
+
+                  <label>
+                    Company *
+                  </label>
+
+                  <select
+                    name="company_id"
+                    value={
+                      employeeForm.company_id
+                    }
+                    onChange={
+                      handleEmployeeFormChange
+                    }
+                    required
+                  >
+
+                    <option value="">
+                      Select company
+                    </option>
+
+                    {companies.map(
+                      (company) => (
+
+                        <option
+                          key={
+                            company.company_id
+                          }
+                          value={
+                            company.company_id
+                          }
+                        >
+                          {company.name}
+                        </option>
+
+                      )
+                    )}
+
+                  </select>
+
+                </div>
+
+                <div className="employees-form-field">
+
+                  <label>
+                    Department *
+                  </label>
+
+                  <select
+                    name="department_id"
+                    value={
+                      employeeForm.department_id
+                    }
+                    onChange={
+                      handleEmployeeFormChange
+                    }
+                    required
+                    disabled={
+                      !employeeForm.company_id
+                    }
+                  >
+
+                    <option value="">
+                      {employeeForm.company_id
+                        ? "Select department"
+                        : "Select company first"}
+                    </option>
+
+                    {visibleDepartments.map(
+                      (department) => (
+
+                        <option
+                          key={
+                            department.department_id
+                          }
+                          value={
+                            department.department_id
+                          }
+                        >
+                          {department.name}
+                        </option>
+
+                      )
+                    )}
+
+                  </select>
+
+                </div>
+
+                <div className="employees-form-field">
+
+                  <label>
+                    Manager
+                  </label>
+
+                  <select
+                    name="manager_id"
+                    value={
+                      employeeForm.manager_id
+                    }
+                    onChange={
+                      handleEmployeeFormChange
+                    }
+                  >
+
+                    <option value="">
+                      No manager
+                    </option>
+
+                    {employees
+                      .filter(
+                        (employee) =>
+                          String(
+                            employee.company_id
+                          ) ===
+                          String(
+                            employeeForm.company_id
+                          ) &&
+                          String(
+                            employee.employee_id
+                          ) !==
+                          String(
+                            editingEmployee?.employee_id
+                          ) &&
+                          String(
+                            employee.status
+                          ).toUpperCase() ===
+                          "ACTIVE"
+                      )
+                      .map(
+                        (employee) => (
+
+                          <option
+                            key={
+                              employee.employee_id
+                            }
+                            value={
+                              employee.employee_id
+                            }
+                          >
+                            {
+                              employee.first_name
+                            }{" "}
+                            {
+                              employee.last_name
+                            }
+                          </option>
+
+                        )
+                      )}
+
+                  </select>
+
+                </div>
+
+                {editingEmployee && (
+
+                  <div className="employees-form-field">
+
+                    <label>
+                      Status
+                    </label>
+
+                    <select
+                      name="status"
+                      value={
+                        employeeForm.status
+                      }
+                      onChange={
+                        handleEmployeeFormChange
+                      }
+                    >
+
+                      <option value="ACTIVE">
+                        Active
+                      </option>
+
+                      <option value="TERMINATED">
+                        Terminated
+                      </option>
+
+                    </select>
+
+                  </div>
+
+                )}
+
+              </div>
+
+              {crudMessage && (
+                <div
+                  className={`employees-modal-message ${
+                    crudMessageType ===
+                    "error"
+                      ? "error"
+                      : "success"
+                  }`}
+                >
+                  {crudMessage}
+                </div>
+              )}
+
+              <div className="employees-form-actions">
+
+                <button
+                  type="button"
+                  className="employees-modal-cancel"
+                  onClick={
+                    closeEmployeeModal
+                  }
+                  disabled={
+                    savingEmployee
+                  }
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="employees-modal-save"
+                  disabled={
+                    savingEmployee
+                  }
+                >
+                  {savingEmployee
+                    ? "Saving..."
+                    : editingEmployee
+                    ? "Save changes"
+                    : "Create employee"}
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+      )}
+
     </div>
   );
 }

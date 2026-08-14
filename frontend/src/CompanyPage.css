@@ -840,3 +840,595 @@ button {
   }
 
 }
+
+/* =====================================================
+   COMPANY CRUD
+===================================================== */
+
+/* CARD */
+
+.company-card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  overflow: hidden;
+
+  padding: 0;
+
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  border-radius: 18px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.company-card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(168, 76, 255, 0.2);
+
+  background:
+    rgba(255, 255, 255, 0.035);
+}
+
+.company-card-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+
+  padding: 17px 17px 0;
+
+  border: 0;
+  background: transparent;
+
+  color: inherit;
+
+  cursor: pointer;
+
+  text-align: left;
+}
+
+.company-card-main .company-card-icon {
+  flex-shrink: 0;
+}
+
+.company-card-content {
+  width: 100%;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color: inherit;
+
+  cursor: pointer;
+
+  text-align: left;
+}
+
+.company-card-content .company-card-body {
+  padding: 15px 17px 0;
+}
+
+.company-card-content .company-card-footer {
+  padding: 16px 17px;
+}
+
+.company-card-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 0 17px 16px;
+}
+
+.company-edit-button,
+.company-deactivate-button {
+  flex: 1;
+
+  height: 31px;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 7px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.company-edit-button {
+  border:
+    1px solid rgba(168, 76, 255, 0.18);
+
+  background:
+    rgba(168, 76, 255, 0.07);
+
+  color: #bd7aff;
+}
+
+.company-edit-button:hover {
+  border-color:
+    rgba(168, 76, 255, 0.35);
+
+  background:
+    rgba(168, 76, 255, 0.14);
+}
+
+.company-deactivate-button {
+  border:
+    1px solid rgba(255, 90, 100, 0.12);
+
+  background:
+    rgba(255, 90, 100, 0.045);
+
+  color: #d97880;
+}
+
+.company-deactivate-button:hover {
+  border-color:
+    rgba(255, 90, 100, 0.3);
+
+  background:
+    rgba(255, 90, 100, 0.09);
+
+  color: #ff858d;
+}
+
+/* MESSAGE */
+
+.company-message {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 18px;
+
+  min-height: 42px;
+
+  padding: 9px 12px;
+
+  border-radius: 11px;
+
+  font-size: 8px;
+}
+
+.company-message span {
+  display: grid;
+  place-items: center;
+
+  width: 21px;
+  height: 21px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.company-message p {
+  flex: 1;
+
+  margin: 0;
+}
+
+.company-message button {
+  width: 24px;
+  height: 24px;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color: inherit;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+.company-message-success {
+  border:
+    1px solid rgba(67, 210, 145, 0.14);
+
+  background:
+    rgba(67, 210, 145, 0.055);
+
+  color: #70d9aa;
+}
+
+.company-message-success span {
+  background:
+    rgba(67, 210, 145, 0.12);
+
+  color: #55d99b;
+}
+
+.company-message-error {
+  border:
+    1px solid rgba(255, 90, 100, 0.14);
+
+  background:
+    rgba(255, 90, 100, 0.055);
+
+  color: #ff858d;
+}
+
+.company-message-error span {
+  background:
+    rgba(255, 90, 100, 0.12);
+
+  color: #ff777f;
+}
+
+/* MODAL */
+
+.company-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    rgba(3, 5, 10, 0.72);
+
+  backdrop-filter: blur(9px);
+}
+
+.company-modal {
+  width: min(520px, 100%);
+
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.07);
+
+  border-radius: 21px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(30, 33, 45, 0.98),
+      rgba(14, 17, 25, 0.99)
+    );
+
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.6);
+
+  animation:
+    company-modal-in 0.2s ease;
+}
+
+@keyframes company-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.company-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 23px 24px 19px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.045);
+}
+
+.company-modal-header p {
+  margin: 0 0 7px;
+
+  color: #a85cff;
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 1.8px;
+}
+
+.company-modal-header h2 {
+  margin: 0;
+
+  color: #f0f1f5;
+
+  font-size: 20px;
+  font-weight: 650;
+
+  letter-spacing: -0.5px;
+}
+
+.company-modal-header span {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #6e7585;
+
+  font-size: 8px;
+}
+
+.company-modal-close {
+  display: grid;
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.05);
+
+  border-radius: 9px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #777e8d;
+
+  font-size: 17px;
+
+  cursor: pointer;
+}
+
+.company-modal-close:hover {
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+}
+
+/* FORM */
+
+.company-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+
+  padding: 22px 24px 24px;
+}
+
+.company-form-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.company-form-field label {
+  color: #999fad;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.company-form-field label span {
+  margin-left: 3px;
+
+  color: #b65cff;
+}
+
+.company-form-field input,
+.company-form-field textarea,
+.company-form-field select {
+  width: 100%;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background:
+    rgba(0, 0, 0, 0.17);
+
+  color: #e5e7eb;
+
+  font-family: inherit;
+  font-size: 9px;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.company-form-field input,
+.company-form-field select {
+  height: 39px;
+
+  padding: 0 11px;
+}
+
+.company-form-field textarea {
+  min-height: 78px;
+
+  padding: 11px;
+
+  resize: vertical;
+}
+
+.company-form-field input::placeholder,
+.company-form-field textarea::placeholder {
+  color: #555c6b;
+}
+
+.company-form-field input:focus,
+.company-form-field textarea:focus,
+.company-form-field select:focus {
+  border-color:
+    rgba(168, 76, 255, 0.4);
+
+  background:
+    rgba(168, 76, 255, 0.025);
+}
+
+.company-form-field select {
+  cursor: pointer;
+}
+
+.company-form-grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 12px;
+}
+
+/* FORM ACTIONS */
+
+.company-form-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 9px;
+
+  margin-top: 4px;
+  padding-top: 17px;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.045);
+}
+
+.company-cancel-button,
+.company-save-button {
+  height: 37px;
+
+  padding: 0 16px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.company-cancel-button {
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #858b9b;
+}
+
+.company-cancel-button:hover {
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+}
+
+.company-save-button {
+  border:
+    1px solid rgba(168, 76, 255, 0.35);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(168, 76, 255, 0.8),
+      rgba(116, 48, 191, 0.75)
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 25px rgba(128, 52, 200, 0.18);
+}
+
+.company-save-button:hover {
+  filter: brightness(1.08);
+}
+
+.company-save-button:disabled,
+.company-cancel-button:disabled,
+.company-modal-close:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .company-modal-overlay {
+    align-items: flex-end;
+
+    padding: 10px;
+  }
+
+  .company-modal {
+    max-height: calc(100vh - 20px);
+
+    border-radius: 18px;
+  }
+
+  .company-modal-header {
+    padding: 20px 18px 16px;
+  }
+
+  .company-form {
+    padding: 18px;
+  }
+
+  .company-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .company-form-actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .company-cancel-button,
+  .company-save-button {
+    width: 100%;
+  }
+}
+

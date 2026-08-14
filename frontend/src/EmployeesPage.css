@@ -1016,3 +1016,506 @@
     flex-wrap: wrap;
   }
 }
+
+
+/* =====================================================
+   EMPLOYEE CRUD
+===================================================== */
+
+.employees-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.employees-add-button {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 14px;
+
+  border: 1px solid rgba(168, 76, 255, 0.28);
+  border-radius: 9px;
+
+  background: rgba(168, 76, 255, 0.09);
+  color: #c084fc;
+
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.employees-add-button:hover {
+  background: rgba(168, 76, 255, 0.16);
+  border-color: rgba(168, 76, 255, 0.45);
+}
+
+
+/* =====================================================
+   CRUD MESSAGE
+===================================================== */
+
+.employees-crud-message {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-bottom: 15px;
+  padding: 9px 11px;
+
+  border-radius: 10px;
+
+  font-size: 8px;
+}
+
+.employees-crud-message p {
+  flex: 1;
+  margin: 0;
+}
+
+.employees-crud-message > span {
+  display: grid;
+  place-items: center;
+
+  width: 21px;
+  height: 21px;
+
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.employees-crud-message button {
+  width: 24px;
+  height: 24px;
+
+  border: 0;
+  background: transparent;
+
+  color: inherit;
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+.employees-crud-message.success {
+  border: 1px solid rgba(55, 205, 137, 0.14);
+  background: rgba(55, 205, 137, 0.055);
+  color: #70d9aa;
+}
+
+.employees-crud-message.success > span {
+  background: rgba(55, 205, 137, 0.12);
+}
+
+.employees-crud-message.error {
+  border: 1px solid rgba(255, 90, 100, 0.14);
+  background: rgba(255, 90, 100, 0.055);
+  color: #ff858d;
+}
+
+.employees-crud-message.error > span {
+  background: rgba(255, 90, 100, 0.12);
+}
+
+
+/* =====================================================
+   ROW ACTIONS
+===================================================== */
+
+.employees-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.employees-edit-button,
+.employees-terminate-button {
+  height: 27px;
+  padding: 0 8px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 7px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.employees-edit-button {
+  border: 1px solid rgba(168, 76, 255, 0.18);
+  background: rgba(168, 76, 255, 0.06);
+  color: #b879ff;
+}
+
+.employees-edit-button:hover {
+  background: rgba(168, 76, 255, 0.13);
+}
+
+.employees-terminate-button {
+  border: 1px solid rgba(255, 90, 100, 0.14);
+  background: rgba(255, 90, 100, 0.045);
+  color: #dc777e;
+}
+
+.employees-terminate-button:hover {
+  background: rgba(255, 90, 100, 0.09);
+  border-color: rgba(255, 90, 100, 0.3);
+  color: #ff858d;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.employees-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(3, 5, 10, 0.72);
+
+  backdrop-filter: blur(9px);
+}
+
+.employees-modal {
+  width: min(620px, 100%);
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(30, 33, 45, 0.98),
+      rgba(14, 17, 25, 0.99)
+    );
+
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.6);
+
+  animation: employees-modal-in 0.2s ease;
+}
+
+@keyframes employees-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =====================================================
+   MODAL HEADER
+===================================================== */
+
+.employees-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 22px 23px 18px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+.employees-modal-header p {
+  margin: 0 0 6px;
+
+  color: #a85cff;
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 1.7px;
+}
+
+.employees-modal-header h2 {
+  margin: 0;
+
+  color: #f0f1f5;
+
+  font-size: 19px;
+  font-weight: 650;
+}
+
+.employees-modal-header span {
+  display: block;
+  margin-top: 6px;
+
+  color: #6e7585;
+
+  font-size: 8px;
+}
+
+.employees-modal-close {
+  display: grid;
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: #777e8d;
+
+  font-size: 17px;
+
+  cursor: pointer;
+}
+
+.employees-modal-close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.employees-form {
+  padding: 21px 23px 23px;
+}
+
+.employees-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 14px;
+}
+
+.employees-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.employees-form-full {
+  grid-column: 1 / -1;
+}
+
+.employees-form-field label {
+  color: #999fad;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.employees-form-field input,
+.employees-form-field select {
+  width: 100%;
+  height: 39px;
+
+  padding: 0 11px;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9px;
+
+  outline: none;
+
+  background: rgba(0, 0, 0, 0.17);
+
+  color: #e5e7eb;
+
+  font-family: inherit;
+  font-size: 9px;
+}
+
+.employees-form-field input::placeholder {
+  color: #555c6b;
+}
+
+.employees-form-field input:focus,
+.employees-form-field select:focus {
+  border-color: rgba(168, 76, 255, 0.4);
+  background: rgba(168, 76, 255, 0.025);
+}
+
+.employees-form-field select {
+  cursor: pointer;
+}
+
+.employees-form-field select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   MODAL MESSAGE
+===================================================== */
+
+.employees-modal-message {
+  margin-top: 15px;
+  padding: 9px 11px;
+
+  border-radius: 9px;
+
+  font-size: 8px;
+}
+
+.employees-modal-message.success {
+  border: 1px solid rgba(55, 205, 137, 0.14);
+  background: rgba(55, 205, 137, 0.055);
+  color: #70d9aa;
+}
+
+.employees-modal-message.error {
+  border: 1px solid rgba(255, 90, 100, 0.14);
+  background: rgba(255, 90, 100, 0.055);
+  color: #ff858d;
+}
+
+
+/* =====================================================
+   FORM BUTTONS
+===================================================== */
+
+.employees-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+
+  margin-top: 20px;
+  padding-top: 16px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+.employees-modal-cancel,
+.employees-modal-save {
+  height: 37px;
+  padding: 0 15px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.employees-modal-cancel {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.025);
+
+  color: #858b9b;
+}
+
+.employees-modal-cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.employees-modal-save {
+  border: 1px solid rgba(168, 76, 255, 0.35);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(168, 76, 255, 0.8),
+      rgba(116, 48, 191, 0.75)
+    );
+
+  color: #fff;
+
+  box-shadow:
+    0 8px 25px rgba(128, 52, 200, 0.18);
+}
+
+.employees-modal-save:hover {
+  filter: brightness(1.08);
+}
+
+.employees-modal-save:disabled,
+.employees-modal-cancel:disabled,
+.employees-modal-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 800px) {
+
+  .employees-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .employees-add-button {
+    width: 100%;
+  }
+
+  .employees-modal-overlay {
+    align-items: flex-end;
+    padding: 10px;
+  }
+
+  .employees-modal {
+    max-height: calc(100vh - 20px);
+    border-radius: 18px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .employees-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .employees-form-full {
+    grid-column: auto;
+  }
+
+  .employees-form-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .employees-modal-cancel,
+  .employees-modal-save {
+    width: 100%;
+  }
+
+  .employees-row-actions {
+    flex-wrap: wrap;
+  }
+
+}
+
