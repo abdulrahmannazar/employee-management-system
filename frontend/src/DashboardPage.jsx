@@ -679,7 +679,7 @@ function DashboardPage() {
                       // navigate to employees page
                     }}
                   >
-                    View all →
+                    View all
                 </button>
                 </div>
 
