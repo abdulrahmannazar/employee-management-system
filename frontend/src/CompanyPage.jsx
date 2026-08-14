@@ -1,12 +1,16 @@
 import "./CompanyPage.css";
 import { useEffect, useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import homeIcon from "./assets/home.png";
 import officeIcon from "./assets/office-building.png";
 import teamIcon from "./assets/team.png";
 
 
 function CompanyPage() {
+
+  const navigate = useNavigate();
 
   const [companies, setCompanies] = useState([]);
 
@@ -118,25 +122,6 @@ function CompanyPage() {
 
 
   // =====================================================
-  // NAVIGATION
-  // =====================================================
-
-  const goTo = (path) => {
-
-    window.history.pushState(
-      {},
-      "",
-      path
-    );
-
-    window.dispatchEvent(
-      new PopStateEvent("popstate")
-    );
-
-  };
-
-
-  // =====================================================
   // RENDER
   // =====================================================
 
@@ -197,7 +182,7 @@ function CompanyPage() {
                 className="company-nav-item"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  goTo("/");
+                  navigate("/");
                 }}
               >
 
@@ -217,7 +202,7 @@ function CompanyPage() {
                 className="company-nav-item"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  goTo("/employees");
+                  navigate("/employees");
                 }}
               >
 
@@ -237,7 +222,7 @@ function CompanyPage() {
                 className="company-nav-item active"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  goTo("/companies");
+                  navigate("/companies");
                 }}
               >
 
@@ -265,7 +250,7 @@ function CompanyPage() {
                 "token"
               );
 
-              goTo("/login");
+              navigate("/login");
 
             }}
           >
@@ -420,7 +405,7 @@ function CompanyPage() {
                         company={company}
 
                         onClick={() =>
-                          goTo(
+                          navigate(
                             `/companies/${company.company_id}`
                           )
                         }
