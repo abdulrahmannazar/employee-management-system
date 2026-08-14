@@ -1,0 +1,46 @@
+.register-card {
+    max-width: 440px;
+}
+
+.auth-field select {
+    width: 100%;
+    height: 48px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px;
+
+    border: 1px solid #292d3b;
+    border-radius: 11px;
+
+    outline: none;
+
+    background: #11141d;
+    color: #f5f5f7;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.auth-field select:focus {
+    border-color: #8b3ff2;
+
+    box-shadow:
+        0 0 0 3px rgba(139, 63, 242, 0.12);
+}
+
+.auth-success {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    border-radius: 10px;
+
+    background: rgba(34, 197, 94, 0.08);
+
+    color: #4ade80;
+
+    font-size: 13px;
+}

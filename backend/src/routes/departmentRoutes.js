@@ -21,6 +21,11 @@ router.get(
     authenticateToken,
     getDepartments
 );
+router.get(
+    "/company/:companyId",
+    authenticateToken,
+    getDepartmentsByCompany
+);
 
 router.get(
     "/:id",

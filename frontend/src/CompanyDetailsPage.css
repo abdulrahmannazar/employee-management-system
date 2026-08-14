@@ -1,0 +1,1645 @@
+/* =====================================================
+   RESET
+===================================================== */
+
+.company-details-app,
+.company-details-app * {
+  box-sizing: border-box;
+}
+
+.company-details-app {
+  min-height: 100vh;
+  width: 100%;
+
+  padding: 18px;
+
+  color: #f1f2f6;
+
+  background:
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(107, 45, 175, 0.12),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(32, 101, 187, 0.1),
+      transparent 35%
+    ),
+    #07090f;
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+
+/* =====================================================
+   SHELL
+===================================================== */
+
+.company-details-shell {
+  position: relative;
+
+  display: flex;
+
+  width: min(1500px, 100%);
+  min-height: calc(100vh - 36px);
+
+  margin: 0 auto;
+
+  overflow: hidden;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.055);
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(28, 31, 44, 0.94),
+      rgba(13, 16, 25, 0.97)
+    );
+
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.5);
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.company-details-sidebar {
+  position: relative;
+
+  z-index: 100;
+
+  width: 235px;
+  min-width: 235px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  padding: 32px 18px;
+
+  border-right:
+    1px solid rgba(255, 255, 255, 0.045);
+
+  background:
+    rgba(11, 14, 22, 0.48);
+
+  backdrop-filter: blur(25px);
+}
+
+.company-details-sidebar-top {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 35px;
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.company-details-logo {
+  padding: 4px 10px 0;
+}
+
+.company-details-logo strong {
+  display: block;
+
+  color: #f1f2f6;
+
+  font-size: 13px;
+  line-height: 1.05;
+
+  letter-spacing: -0.3px;
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+.company-details-navigation {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.company-details-nav-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  width: 100%;
+
+  min-height: 40px;
+
+  padding: 10px 12px;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: transparent;
+
+  color: #747b8b;
+
+  font-family: inherit;
+  font-size: 10px;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.company-details-nav-item:hover {
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.04);
+}
+
+.company-details-nav-item.active {
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(126, 47, 232, 0.38),
+      rgba(82, 40, 151, 0.25)
+    );
+
+  box-shadow:
+    inset 2px 0 0 #a84cff;
+}
+
+.company-details-nav-icon {
+  display: grid;
+
+  place-items: center;
+
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+}
+
+.company-details-nav-icon img {
+  width: 17px;
+  height: 17px;
+
+  object-fit: contain;
+}
+
+
+/* =====================================================
+   SIDEBAR BOTTOM
+===================================================== */
+
+.company-details-sidebar-bottom {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.company-details-logout {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 8px 13px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #666d7d;
+
+  font-family: inherit;
+  font-size: 11px;
+
+  cursor: pointer;
+}
+
+.company-details-logout:hover {
+  color: #ffffff;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.company-details-main {
+  min-width: 0;
+
+  flex: 1;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(20, 23, 34, 0.45),
+      rgba(10, 12, 19, 0.2)
+    );
+}
+
+
+/* =====================================================
+   TOPBAR
+===================================================== */
+
+.company-details-topbar {
+  height: 78px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 32px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.045);
+}
+
+.company-details-topbar-left {
+  flex: 1;
+}
+
+
+/* =====================================================
+   MOBILE MENU BUTTON
+===================================================== */
+
+.company-details-menu-button {
+  display: none;
+
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 11px;
+
+  background:
+    rgba(255, 255, 255, 0.045);
+
+  color: #ffffff;
+
+  font-size: 17px;
+
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   USER
+===================================================== */
+
+.company-details-user {
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+}
+
+.company-details-user-info {
+  text-align: right;
+}
+
+.company-details-user-info strong {
+  display: block;
+
+  color: #e6e8ee;
+
+  font-size: 9px;
+}
+
+.company-details-user-info small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #626979;
+
+  font-size: 7px;
+}
+
+.company-details-avatar {
+  display: grid;
+
+  place-items: center;
+
+  width: 36px;
+  height: 36px;
+
+  border:
+    1px solid #9d43ff;
+
+  border-radius: 50%;
+
+  color: #c684ff;
+
+  font-size: 9px;
+
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.company-details-content {
+  width: 100%;
+
+  padding: 30px 32px 45px;
+}
+
+
+/* =====================================================
+   BACK BUTTON
+===================================================== */
+
+.company-details-back {
+  display: inline-flex;
+
+  align-items: center;
+
+  margin-bottom: 26px;
+
+  padding: 8px 11px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background:
+    rgba(255, 255, 255, 0.035);
+
+  color: #a855f7;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.company-details-back:hover {
+  color: #c084fc;
+
+  background:
+    rgba(168, 85, 247, 0.09);
+}
+
+
+/* =====================================================
+   COMPANY HEADING
+===================================================== */
+
+.company-details-heading {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 25px;
+
+  margin-bottom: 30px;
+}
+
+.company-details-label {
+  margin: 0 0 10px;
+
+  color: #777e8d;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+}
+
+.company-details-heading h1 {
+  margin: 0;
+
+  color: #f1f2f6;
+
+  font-size: 36px;
+  font-weight: 700;
+
+  letter-spacing: -1.2px;
+}
+
+.company-details-description {
+  margin: 10px 0 0;
+
+  color: #777e8d;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.company-details-company-id {
+  flex-shrink: 0;
+
+  color: #72798a;
+
+  font-size: 9px;
+}
+
+
+/* =====================================================
+   DEPARTMENTS SECTION
+===================================================== */
+
+.company-details-section {
+  width: 100%;
+}
+
+.company-details-section-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 14px;
+}
+
+.company-details-section-header h2 {
+  margin: 0;
+
+  color: #e4e6ec;
+
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.company-details-section-header p {
+  margin: 5px 0 0;
+
+  color: #666d7d;
+
+  font-size: 8px;
+}
+
+
+/* =====================================================
+   DEPARTMENT GRID
+===================================================== */
+
+.company-details-department-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 13px;
+
+  width: 100%;
+}
+
+
+/* =====================================================
+   DEPARTMENT CARD
+===================================================== */
+
+.company-details-department-card {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 105px;
+
+  padding: 16px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.045);
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(37, 40, 54, 0.9),
+      rgba(26, 29, 40, 0.82)
+    );
+
+  color: #ffffff;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.company-details-department-card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(168, 76, 255, 0.35);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(43, 45, 62, 0.95),
+      rgba(27, 29, 41, 0.9)
+    );
+}
+
+
+/* =====================================================
+   DEPARTMENT ICON
+===================================================== */
+
+.company-details-department-icon {
+  display: grid;
+
+  place-items: center;
+
+  flex-shrink: 0;
+
+  width: 42px;
+  height: 42px;
+
+  border:
+    1px solid rgba(168, 76, 255, 0.25);
+
+  border-radius: 13px;
+
+  background:
+    rgba(166, 72, 255, 0.13);
+
+  color: #b66aff;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   DEPARTMENT INFO
+===================================================== */
+
+.company-details-department-info {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.company-details-department-info h3 {
+  margin: 0;
+
+  color: #e4e6ec;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.company-details-status {
+  display: inline-flex;
+
+  margin-top: 8px;
+
+  padding: 4px 8px;
+
+  border-radius: 20px;
+
+  font-size: 6px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+}
+
+.company-details-status.active {
+  color: #55d99b;
+
+  background:
+    rgba(55, 205, 137, 0.1);
+}
+
+.company-details-status.inactive {
+  color: #ff777f;
+
+  background:
+    rgba(255, 90, 100, 0.1);
+}
+
+
+/* =====================================================
+   ARROW
+===================================================== */
+
+.company-details-arrow {
+  flex-shrink: 0;
+
+  color: #a94dff;
+
+  font-size: 16px;
+}
+
+
+/* =====================================================
+   STATES
+===================================================== */
+
+.company-details-state {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 250px;
+
+  padding: 30px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.045);
+
+  border-radius: 17px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #777e8d;
+
+  font-size: 10px;
+
+  text-align: center;
+}
+
+.company-details-error {
+  color: #ff7777;
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.company-details-empty {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 180px;
+
+  padding: 30px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.045);
+
+  border-radius: 17px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #777e8d;
+
+  font-size: 10px;
+}
+
+
+/* =====================================================
+   MOBILE OVERLAY
+===================================================== */
+
+.company-details-mobile-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 90;
+
+  background:
+    rgba(0, 0, 0, 0.58);
+
+  backdrop-filter: blur(3px);
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1100px) {
+
+  .company-details-sidebar {
+    width: 205px;
+    min-width: 205px;
+  }
+
+  .company-details-department-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 800px) {
+
+  .company-details-app {
+    padding: 10px;
+  }
+
+  .company-details-shell {
+    min-height: calc(100vh - 20px);
+
+    border-radius: 28px;
+  }
+
+
+  /* SIDEBAR DRAWER */
+
+  .company-details-sidebar {
+    position: fixed;
+
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+
+    width: 245px;
+    min-width: 245px;
+
+    padding: 28px 16px;
+
+    border:
+      1px solid rgba(255, 255, 255, 0.06);
+
+    border-radius: 23px;
+
+    transform:
+      translateX(-120%);
+
+    transition:
+      transform 0.25s ease;
+
+    box-shadow:
+      20px 0 60px
+      rgba(0, 0, 0, 0.45);
+  }
+
+  .company-details-sidebar-open {
+    transform:
+      translateX(0);
+  }
+
+
+  /* MENU */
+
+  .company-details-menu-button {
+    display: grid;
+  }
+
+
+  /* TOPBAR */
+
+  .company-details-topbar {
+    height: 62px;
+
+    padding: 0 18px;
+  }
+
+
+  /* CONTENT */
+
+  .company-details-content {
+    padding: 22px 18px 30px;
+  }
+
+
+  /* HEADER */
+
+  .company-details-heading {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 14px;
+  }
+
+  .company-details-heading h1 {
+    font-size: 30px;
+  }
+
+  .company-details-company-id {
+    margin-top: 0;
+  }
+
+
+  /* DEPARTMENTS */
+
+  .company-details-department-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =====================================================
+   SMALL PHONE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .company-details-user-info {
+    display: none;
+  }
+
+  .company-details-content {
+    padding: 20px 16px 28px;
+  }
+
+  .company-details-heading h1 {
+    font-size: 27px;
+  }
+
+  .company-details-department-card {
+    min-height: 92px;
+
+    padding: 14px;
+  }
+
+}
+
+
+/* =====================================================
+   VERY SMALL PHONE
+===================================================== */
+
+@media (max-width: 400px) {
+
+  .company-details-content {
+    padding: 18px 13px 25px;
+  }
+
+  .company-details-topbar {
+    padding: 0 13px;
+  }
+
+  .company-details-department-grid {
+    gap: 10px;
+  }
+
+}
+
+
+/* =====================================================
+   DEPARTMENT CRUD
+===================================================== */
+
+.company-details-add-button {
+  flex-shrink: 0;
+
+  height: 34px;
+
+  padding: 0 13px;
+
+  border: 1px solid rgba(168, 76, 255, 0.25);
+  border-radius: 9px;
+
+  background: rgba(168, 76, 255, 0.08);
+
+  color: #c084fc;
+
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.company-details-add-button:hover {
+  background: rgba(168, 76, 255, 0.15);
+  border-color: rgba(168, 76, 255, 0.4);
+}
+
+
+/* =====================================================
+   DEPARTMENT CARD WRAPPER
+===================================================== */
+
+.company-details-department-card-wrapper {
+  min-width: 0;
+
+  padding: 0;
+
+  border-radius: 17px;
+
+  overflow: hidden;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.045);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(37, 40, 54, 0.9),
+      rgba(26, 29, 40, 0.82)
+    );
+}
+
+.company-details-department-card-wrapper
+  .company-details-department-card {
+  border: 0;
+
+  border-radius: 0;
+
+  background: transparent;
+
+  min-height: 105px;
+}
+
+.company-details-department-card-wrapper
+  .company-details-department-card:hover {
+  transform: none;
+
+  border: 0;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(43, 45, 62, 0.95),
+      rgba(27, 29, 41, 0.9)
+    );
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.company-details-department-actions {
+  display: flex;
+
+  gap: 7px;
+
+  padding: 0 16px 14px;
+}
+
+.company-details-edit-button,
+.company-details-deactivate-button {
+  flex: 1;
+
+  height: 29px;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 7px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.company-details-edit-button {
+  border:
+    1px solid rgba(168, 76, 255, 0.18);
+
+  background:
+    rgba(168, 76, 255, 0.06);
+
+  color: #b879ff;
+}
+
+.company-details-edit-button:hover {
+  border-color:
+    rgba(168, 76, 255, 0.35);
+
+  background:
+    rgba(168, 76, 255, 0.13);
+}
+
+.company-details-deactivate-button {
+  border:
+    1px solid rgba(255, 90, 100, 0.13);
+
+  background:
+    rgba(255, 90, 100, 0.045);
+
+  color: #dc777e;
+}
+
+.company-details-deactivate-button:hover {
+  border-color:
+    rgba(255, 90, 100, 0.3);
+
+  background:
+    rgba(255, 90, 100, 0.09);
+
+  color: #ff858d;
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+.company-details-message {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  width: 100%;
+
+  min-height: 40px;
+
+  margin-bottom: 18px;
+
+  padding: 8px 11px;
+
+  border-radius: 10px;
+
+  font-size: 8px;
+}
+
+.company-details-message > span {
+  display: grid;
+
+  place-items: center;
+
+  width: 21px;
+  height: 21px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.company-details-message p {
+  flex: 1;
+
+  margin: 0;
+}
+
+.company-details-message button {
+  width: 24px;
+  height: 24px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: inherit;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+.company-details-message-success {
+  border:
+    1px solid rgba(67, 210, 145, 0.14);
+
+  background:
+    rgba(67, 210, 145, 0.055);
+
+  color: #70d9aa;
+}
+
+.company-details-message-success > span {
+  background:
+    rgba(67, 210, 145, 0.12);
+
+  color: #55d99b;
+}
+
+.company-details-message-error {
+  border:
+    1px solid rgba(255, 90, 100, 0.14);
+
+  background:
+    rgba(255, 90, 100, 0.055);
+
+  color: #ff858d;
+}
+
+.company-details-message-error > span {
+  background:
+    rgba(255, 90, 100, 0.12);
+
+  color: #ff777f;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.company-details-empty > div {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 7px;
+
+  text-align: center;
+}
+
+.company-details-empty strong {
+  color: #dfe1e7;
+
+  font-size: 11px;
+}
+
+.company-details-empty span {
+  color: #686f7e;
+
+  font-size: 8px;
+}
+
+.company-details-empty button {
+  margin-top: 5px;
+
+  height: 31px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(168, 76, 255, 0.2);
+  border-radius: 8px;
+
+  background: rgba(168, 76, 255, 0.07);
+
+  color: #b879ff;
+
+  font-family: inherit;
+  font-size: 7px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.company-details-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    rgba(3, 5, 10, 0.72);
+
+  backdrop-filter: blur(9px);
+}
+
+.company-details-modal {
+  width: min(470px, 100%);
+
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.07);
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(30, 33, 45, 0.98),
+      rgba(14, 17, 25, 0.99)
+    );
+
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.6);
+
+  animation:
+    company-details-modal-in 0.2s ease;
+}
+
+@keyframes company-details-modal-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(8px)
+      scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =====================================================
+   MODAL HEADER
+===================================================== */
+
+.company-details-modal-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 22px 23px 18px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.045);
+}
+
+.company-details-modal-header p {
+  margin: 0 0 6px;
+
+  color: #a85cff;
+
+  font-size: 7px;
+  font-weight: 700;
+
+  letter-spacing: 1.7px;
+}
+
+.company-details-modal-header h2 {
+  margin: 0;
+
+  color: #f0f1f5;
+
+  font-size: 19px;
+  font-weight: 650;
+}
+
+.company-details-modal-header span {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #6e7585;
+
+  font-size: 8px;
+}
+
+.company-details-modal-close {
+  display: grid;
+
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.05);
+
+  border-radius: 9px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #777e8d;
+
+  font-size: 17px;
+
+  cursor: pointer;
+}
+
+.company-details-modal-close:hover {
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.company-details-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+
+  padding: 21px 23px 23px;
+}
+
+.company-details-form-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.company-details-form-field label {
+  color: #999fad;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.company-details-form-field label span {
+  margin-left: 3px;
+
+  color: #b65cff;
+}
+
+.company-details-form-field input,
+.company-details-form-field select {
+  width: 100%;
+  height: 39px;
+
+  padding: 0 11px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background:
+    rgba(0, 0, 0, 0.17);
+
+  color: #e5e7eb;
+
+  font-family: inherit;
+  font-size: 9px;
+}
+
+.company-details-form-field input::placeholder {
+  color: #555c6b;
+}
+
+.company-details-form-field input:focus,
+.company-details-form-field select:focus {
+  border-color:
+    rgba(168, 76, 255, 0.4);
+
+  background:
+    rgba(168, 76, 255, 0.025);
+}
+
+.company-details-form-field select {
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   COMPANY DISPLAY
+===================================================== */
+
+.company-details-form-company {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 11px 12px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.045);
+
+  border-radius: 10px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+}
+
+.company-details-form-company span {
+  color: #676e7d;
+
+  font-size: 7px;
+}
+
+.company-details-form-company strong {
+  color: #dfe1e7;
+
+  font-size: 9px;
+}
+
+
+/* =====================================================
+   FORM ACTIONS
+===================================================== */
+
+.company-details-form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  padding-top: 16px;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.045);
+}
+
+.company-details-cancel-button,
+.company-details-save-button {
+  height: 37px;
+
+  padding: 0 15px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.company-details-cancel-button {
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  color: #858b9b;
+}
+
+.company-details-cancel-button:hover {
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+}
+
+.company-details-save-button {
+  border:
+    1px solid rgba(168, 76, 255, 0.35);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(168, 76, 255, 0.8),
+      rgba(116, 48, 191, 0.75)
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 25px
+    rgba(128, 52, 200, 0.18);
+}
+
+.company-details-save-button:hover {
+  filter: brightness(1.08);
+}
+
+.company-details-save-button:disabled,
+.company-details-cancel-button:disabled,
+.company-details-modal-close:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   MOBILE CRUD
+===================================================== */
+
+@media (max-width: 800px) {
+
+  .company-details-section-header {
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .company-details-add-button {
+    flex-shrink: 0;
+  }
+
+  .company-details-modal-overlay {
+    align-items: flex-end;
+
+    padding: 10px;
+  }
+
+  .company-details-modal {
+    max-height: calc(100vh - 20px);
+
+    border-radius: 18px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .company-details-section-header {
+    flex-direction: column;
+  }
+
+  .company-details-add-button {
+    width: 100%;
+  }
+
+  .company-details-modal-header {
+    padding: 19px 18px 16px;
+  }
+
+  .company-details-form {
+    padding: 18px;
+  }
+
+  .company-details-form-actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .company-details-cancel-button,
+  .company-details-save-button {
+    width: 100%;
+  }
+
+}

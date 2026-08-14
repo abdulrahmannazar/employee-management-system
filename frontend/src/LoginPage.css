@@ -1,0 +1,254 @@
+/* ================================
+   LOGIN PAGE
+================================ */
+
+.auth-page {
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px;
+
+    background:
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(126, 62, 255, 0.12),
+            transparent 30%
+        ),
+        #0f111a;
+
+    color: #f5f5f7;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+
+/* ================================
+   LOGIN CARD
+================================ */
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+
+    box-sizing: border-box;
+
+    padding: 36px;
+
+    background: #171a25;
+
+    border: 1px solid #282c3a;
+    border-radius: 22px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.35);
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.auth-header {
+    margin-bottom: 30px;
+}
+
+.auth-label {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: #a855f7;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.auth-header h1 {
+    margin: 0 0 8px;
+
+    color: #f5f5f7;
+
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    letter-spacing: -0.5px;
+}
+
+.auth-header p {
+    margin: 0;
+
+    color: #858b9e;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ================================
+   ERROR
+================================ */
+
+.auth-error {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 10px;
+
+    background: rgba(239, 68, 68, 0.08);
+
+    color: #f87171;
+
+    font-size: 13px;
+}
+
+
+/* ================================
+   FORM
+================================ */
+
+.auth-field {
+    margin-bottom: 18px;
+}
+
+.auth-field label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #aeb3c2;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.auth-field input {
+    width: 100%;
+    height: 48px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px;
+
+    border: 1px solid #292d3b;
+    border-radius: 11px;
+
+    outline: none;
+
+    background: #11141d;
+
+    color: #f5f5f7;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.auth-field input::placeholder {
+    color: #62697a;
+}
+
+.auth-field input:focus {
+    border-color: #8b3ff2;
+
+    box-shadow:
+        0 0 0 3px rgba(139, 63, 242, 0.12);
+}
+
+
+/* ================================
+   SIGN IN BUTTON
+================================ */
+
+.auth-submit {
+    width: 100%;
+    height: 48px;
+
+    margin-top: 6px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: linear-gradient(
+        135deg,
+        #8b3ff2,
+        #a855f7
+    );
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        opacity 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.auth-submit:hover {
+    box-shadow:
+        0 8px 24px rgba(139, 63, 242, 0.25);
+
+    transform: translateY(-1px);
+}
+
+.auth-submit:active {
+    transform: translateY(0);
+}
+
+.auth-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* ================================
+   FOOTER
+================================ */
+
+.auth-footer {
+    margin: 22px 0 0;
+
+    text-align: center;
+
+    color: #707689;
+
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.auth-footer a {
+    color: #a855f7;
+
+    font-weight: 500;
+
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    color: #c084fc;
+}
