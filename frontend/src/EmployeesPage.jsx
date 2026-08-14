@@ -1181,10 +1181,11 @@ function EmployeesPage() {
                           department.department_id
                         }
                       >
-                        {department.name}
+                        {department.department_name}
                       </option>
                     )
                   )}
+       
                 </select>
 
                 <select
@@ -1882,12 +1883,11 @@ function EmployeesPage() {
                             department.department_id
                           }
                         >
-                          {department.name}
+                          {department.department_name}
                         </option>
 
                       )
                     )}
-
                   </select>
 
                 </div>
