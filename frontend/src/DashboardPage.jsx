@@ -8,32 +8,30 @@ import {
 } from "./services/api";
 
 import homeIcon from "./assets/home.png";
-import offficeIcon from "./assets/office-building.png";
+import officeIcon from "./assets/office-building.png";
 import teamIcon from "./assets/team.png";
 
 
-function App() {
+function DashboardPage() {
 
-  // ================================================
+  // =====================================================
   // STATE
-  // ================================================
+  // =====================================================
 
   const [dashboard, setDashboard] = useState(null);
-
   const [recentEmployees, setRecentEmployees] = useState([]);
-
   const [departments, setDepartments] = useState([]);
-
   const [onLeaveCount, setOnLeaveCount] = useState(0);
 
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // ================================================
-  // LOAD DASHBOARD DATA
-  // ================================================
+
+  // =====================================================
+  // LOAD DASHBOARD
+  // =====================================================
 
   useEffect(() => {
 
@@ -44,22 +42,20 @@ function App() {
         setLoading(true);
         setError("");
 
-
-        // --------------------------------------------
+        // -----------------------------------------------
         // DASHBOARD SUMMARY
-        // --------------------------------------------
+        // -----------------------------------------------
 
         const dashboardData = await getDashboard();
 
         console.log("Dashboard data:", dashboardData);
 
-
         setDashboard(dashboardData);
 
 
-        // --------------------------------------------
+        // -----------------------------------------------
         // RECENT EMPLOYEES
-        // --------------------------------------------
+        // -----------------------------------------------
 
         const employeeData = await getEmployees({
           page: 1,
@@ -70,20 +66,18 @@ function App() {
 
         console.log("Recent employees:", employeeData);
 
-
         setRecentEmployees(
           employeeData?.employees || []
         );
 
 
-        // --------------------------------------------
+        // -----------------------------------------------
         // DEPARTMENTS
-        // --------------------------------------------
+        // -----------------------------------------------
 
         const departmentData = await getDepartments();
 
         console.log("Department data:", departmentData);
-
 
         const departmentList =
           Array.isArray(departmentData)
@@ -91,9 +85,9 @@ function App() {
             : departmentData?.departments || [];
 
 
-        // --------------------------------------------
-        // GET EMPLOYEE COUNT FOR EACH DEPARTMENT
-        // --------------------------------------------
+        // -----------------------------------------------
+        // EMPLOYEE COUNT PER DEPARTMENT
+        // -----------------------------------------------
 
         const departmentsWithCounts =
           await Promise.all(
@@ -115,14 +109,15 @@ function App() {
                   ...department,
 
                   employee_count:
-                    employeeCountData?.pagination
+                    employeeCountData
+                      ?.pagination
                       ?.total_items || 0,
                 };
 
               } catch (departmentError) {
 
                 console.error(
-                  `Failed to load employees for department ${department.department_id}`,
+                  "Department count error:",
                   departmentError
                 );
 
@@ -143,9 +138,9 @@ function App() {
         );
 
 
-        // --------------------------------------------
-        // ON LEAVE COUNT
-        // --------------------------------------------
+        // -----------------------------------------------
+        // ON LEAVE
+        // -----------------------------------------------
 
         try {
 
@@ -158,13 +153,15 @@ function App() {
 
 
           setOnLeaveCount(
-            onLeaveData?.pagination?.total_items || 0
+            onLeaveData
+              ?.pagination
+              ?.total_items || 0
           );
 
         } catch (leaveError) {
 
           console.error(
-            "Failed to load on-leave employees:",
+            "On leave error:",
             leaveError
           );
 
@@ -198,106 +195,62 @@ function App() {
   }, []);
 
 
-  // ================================================
-  // LOADING STATE
-  // ================================================
+  // =====================================================
+  // LOADING
+  // =====================================================
 
   if (loading) {
 
     return (
       <div className="app">
-
         <div className="app-shell">
-
-          <div
-            style={{
-              minHeight: "100vh",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-              fontSize: "14px",
-            }}
-          >
+          <div className="state-screen">
             Loading dashboard...
           </div>
-
         </div>
-
       </div>
     );
 
   }
 
 
-  // ================================================
-  // ERROR STATE
-  // ================================================
+  // =====================================================
+  // ERROR
+  // =====================================================
 
   if (error) {
 
     return (
       <div className="app">
-
         <div className="app-shell">
-
-          <div
-            style={{
-              minHeight: "100vh",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#ff7b7b",
-              fontSize: "14px",
-              padding: "30px",
-              textAlign: "center",
-            }}
-          >
+          <div className="state-screen error-state">
             Error: {error}
           </div>
-
         </div>
-
       </div>
     );
 
   }
 
-
-  // ================================================
-  // SAFETY CHECK
-  // ================================================
 
   if (!dashboard) {
 
     return (
       <div className="app">
-
         <div className="app-shell">
-
-          <div
-            style={{
-              minHeight: "100vh",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-            }}
-          >
+          <div className="state-screen">
             No dashboard data available.
           </div>
-
         </div>
-
       </div>
     );
 
   }
 
 
-  // ================================================
+  // =====================================================
   // DASHBOARD VALUES
-  // ================================================
+  // =====================================================
 
   const totalEmployees =
     dashboard?.employees?.total_employees || 0;
@@ -305,40 +258,31 @@ function App() {
   const activeEmployees =
     dashboard?.employees?.active_employees || 0;
 
-  const terminatedEmployees =
-    dashboard?.employees?.terminated_employees || 0;
-
   const totalCompanies =
     dashboard?.companies?.total_companies || 0;
 
-  const totalDepartments =
-    dashboard?.departments?.total_departments || 0;
 
-
-  // ================================================
-  // ACTIVE EMPLOYEE PERCENTAGE
-  // ================================================
+  // =====================================================
+  // PERCENTAGES
+  // =====================================================
 
   const activePercentage =
     totalEmployees > 0
-      ? ((activeEmployees / totalEmployees) * 100).toFixed(1)
+      ? ((activeEmployees / totalEmployees) * 100)
+          .toFixed(1)
       : "0.0";
 
-
-  // ================================================
-  // ON LEAVE PERCENTAGE
-  // ================================================
 
   const onLeavePercentage =
     totalEmployees > 0
-      ? ((onLeaveCount / totalEmployees) * 100).toFixed(1)
+      ? ((onLeaveCount / totalEmployees) * 100)
+          .toFixed(1)
       : "0.0";
 
 
-  // ================================================
-  // DEPARTMENT MAX COUNT
-  // Used for progress bars
-  // ================================================
+  // =====================================================
+  // DEPARTMENT MAX
+  // =====================================================
 
   const maxDepartmentCount =
     departments.length > 0
@@ -353,49 +297,75 @@ function App() {
       : 0;
 
 
-  // ================================================
+  // =====================================================
+  // NAVIGATION
+  // =====================================================
+
+  const goTo = (path) => {
+
+    window.history.pushState({}, "", path);
+
+    window.dispatchEvent(
+      new PopStateEvent("popstate")
+    );
+
+  };
+
+
+  // =====================================================
   // RENDER
-  // ================================================
+  // =====================================================
 
   return (
 
     <div className="app">
 
-      {/* ============================================
-          BACKGROUND GLOW
-      ============================================ */}
-
+      {/* Background */}
       <div className="bg-glow glow-purple"></div>
-
       <div className="bg-glow glow-blue"></div>
 
-
-      {/* ============================================
-          MAIN APPLICATION SHELL
-      ============================================ */}
 
       <div className="app-shell">
 
 
-        {/* ============================================
-            SIDEBAR
-        ============================================ */}
+        {/* =================================================
+            MOBILE OVERLAY
+        ================================================= */}
 
-        <aside className="sidebar">
+        {mobileMenuOpen && (
+          <div
+            className="mobile-overlay"
+            onClick={() =>
+              setMobileMenuOpen(false)
+            }
+          />
+        )}
+
+
+        {/* =================================================
+            SIDEBAR
+        ================================================= */}
+
+        <aside
+          className={`sidebar ${
+            mobileMenuOpen
+              ? "mobile-open"
+              : ""
+          }`}
+        >
 
           <div className="sidebar-top">
-
 
             {/* Logo */}
 
             <div className="logo">
 
               <div className="logo-text">
-
                 <strong>
-                  EMPLOYEE MANAGMENT SYSTEM
+                  EMPLOYEE
+                  <br />
+                  MANAGEMENT SYSTEM
                 </strong>
-
               </div>
 
             </div>
@@ -409,18 +379,30 @@ function App() {
                 icon={homeIcon}
                 text="Dashboard"
                 active
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  goTo("/");
+                }}
               />
 
 
               <NavItem
                 icon={teamIcon}
                 text="Employees"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  goTo("/employees");
+                }}
               />
 
 
               <NavItem
-                icon={offficeIcon}
+                icon={officeIcon}
                 text="Companies"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  goTo("/companies");
+                }}
               />
 
             </nav>
@@ -432,14 +414,17 @@ function App() {
 
           <div className="sidebar-bottom">
 
-            <button className="logout-button">
-
+            <button
+              className="logout-button"
+              onClick={() => {
+                localStorage.removeItem("token");
+                goTo("/login");
+              }}
+            >
               ↪
-
               <span>
                 Log out
               </span>
-
             </button>
 
           </div>
@@ -447,21 +432,29 @@ function App() {
         </aside>
 
 
-        {/* ============================================
-            MAIN CONTENT
-        ============================================ */}
+        {/* =================================================
+            MAIN
+        ================================================= */}
 
         <main className="main-content">
 
 
-          {/* ============================================
+          {/* =================================================
               TOP BAR
-          ============================================ */}
+          ================================================= */}
 
           <header className="topbar">
 
-            <button className="menu-button">
-              ☰
+            <button
+              className="menu-button"
+              onClick={() =>
+                setMobileMenuOpen(
+                  !mobileMenuOpen
+                )
+              }
+              aria-label="Open navigation"
+            >
+              {mobileMenuOpen ? "×" : "☰"}
             </button>
 
 
@@ -497,16 +490,16 @@ function App() {
           </header>
 
 
-          {/* ============================================
-              PAGE CONTENT
-          ============================================ */}
+          {/* =================================================
+              CONTENT
+          ================================================= */}
 
           <div className="page-content">
 
 
-            {/* ============================================
+            {/* =================================================
                 WELCOME
-            ============================================ */}
+            ================================================= */}
 
             <section className="welcome-section">
 
@@ -516,14 +509,13 @@ function App() {
                   EMPLOYEE MANAGEMENT DASHBOARD
                 </p>
 
-
                 <h1>
                   Welcome, <span>Rahma</span>
                 </h1>
 
-
                 <p className="welcome-description">
-                  Here's what's happening across your organization.
+                  Here's what's happening across
+                  your organization.
                 </p>
 
               </div>
@@ -546,14 +538,11 @@ function App() {
             </section>
 
 
-            {/* ============================================
-                STAT CARDS
-            ============================================ */}
+            {/* =================================================
+                STATS
+            ================================================= */}
 
             <section className="stats-grid">
-
-
-              {/* TOTAL EMPLOYEES */}
 
               <StatCard
                 icon="♙"
@@ -562,8 +551,6 @@ function App() {
                 type="purple"
               />
 
-
-              {/* ACTIVE EMPLOYEES */}
 
               <StatCard
                 icon="✓"
@@ -575,8 +562,6 @@ function App() {
               />
 
 
-              {/* ON LEAVE */}
-
               <StatCard
                 icon="◷"
                 label="On leave"
@@ -586,8 +571,6 @@ function App() {
                 type="orange"
               />
 
-
-              {/* COMPANIES */}
 
               <StatCard
                 icon="◇"
@@ -599,14 +582,12 @@ function App() {
             </section>
 
 
-            {/* ============================================
-                MAIN DASHBOARD GRID
-            ============================================ */}
+            {/* =================================================
+                QUICK ACTIONS
+                FULL WIDTH - FIXES EMPTY SPACE
+            ================================================= */}
 
             <section className="dashboard-grid">
-
-
-              {/* RIGHT QUICK ACTIONS */}
 
               <div className="quick-panel">
 
@@ -624,7 +605,6 @@ function App() {
 
                   </div>
 
-
                   <button className="more-button">
                     •••
                   </button>
@@ -633,7 +613,6 @@ function App() {
 
 
                 <div className="action-list">
-
 
                   <QuickAction
                     icon="+"
@@ -665,16 +644,16 @@ function App() {
             </section>
 
 
-            {/* ============================================
+            {/* =================================================
                 BOTTOM GRID
-            ============================================ */}
+            ================================================= */}
 
             <section className="bottom-grid">
 
 
-              {/* ============================================
+              {/* =================================================
                   RECENT EMPLOYEES
-              ============================================ */}
+              ================================================= */}
 
               <div className="content-panel">
 
@@ -687,32 +666,29 @@ function App() {
                     </h3>
 
                     <p>
-                      Latest people added to your organization
+                      Latest people added to your
+                      organization
                     </p>
 
                   </div>
 
 
-                  <button className="view-all">
+                  <button
+                    className="recent-view-all"
+                    onClick={() => {
+                      // navigate to employees page
+                    }}
+                  >
                     View all →
-                  </button>
-
+                </button>
                 </div>
 
 
                 <div className="employee-table">
 
-
                   {recentEmployees.length === 0 ? (
 
-                    <div
-                      style={{
-                        padding: "20px",
-                        textAlign: "center",
-                        color: "#666d7d",
-                        fontSize: "9px",
-                      }}
-                    >
+                    <div className="empty-message">
                       No employees found
                     </div>
 
@@ -728,11 +704,17 @@ function App() {
                           }
 
                           initials={
-                            `${employee.first_name?.[0] || ""}${employee.last_name?.[0] || ""}`
+                            `${
+                              employee.first_name?.[0] || ""
+                            }${
+                              employee.last_name?.[0] || ""
+                            }`
                           }
 
                           name={
-                            `${employee.first_name} ${employee.last_name}`
+                            `${employee.first_name || ""} ${
+                              employee.last_name || ""
+                            }`
                           }
 
                           role={
@@ -762,9 +744,9 @@ function App() {
               </div>
 
 
-              {/* ============================================
-                  DEPARTMENT OVERVIEW
-              ============================================ */}
+              {/* =================================================
+                  DEPARTMENTS
+              ================================================= */}
 
               <div className="content-panel department-panel">
 
@@ -782,7 +764,6 @@ function App() {
 
                   </div>
 
-
                   <button className="more-button">
                     •••
                   </button>
@@ -792,17 +773,9 @@ function App() {
 
                 <div className="department-list">
 
-
                   {departments.length === 0 ? (
 
-                    <div
-                      style={{
-                        padding: "20px 0",
-                        textAlign: "center",
-                        color: "#666d7d",
-                        fontSize: "9px",
-                      }}
-                    >
+                    <div className="empty-message">
                       No departments found
                     </div>
 
@@ -830,15 +803,22 @@ function App() {
                         return (
 
                           <Department
-                            key={department.department_id}
-                            name={
-                                department.name ||
-                                department.department_name ||
-                                "Unnamed department"
+                            key={
+                              department.department_id
                             }
+
+                            name={
+                              department.name ||
+                              department.department_name ||
+                              "Unnamed department"
+                            }
+
                             count={count}
-                            percentage={`${percentage}%`}
-                        />
+
+                            percentage={
+                              `${percentage}%`
+                            }
+                          />
 
                         );
 
@@ -853,7 +833,6 @@ function App() {
 
             </section>
 
-
           </div>
 
         </main>
@@ -865,34 +844,15 @@ function App() {
 }
 
 
-/* ================================================
-   FORMAT STATUS
-================================================ */
-
-function formatStatus(status) {
-
-  if (!status) {
-    return "Unknown";
-  }
-
-  return status
-    .toLowerCase()
-    .replace(/_/g, " ")
-    .replace(
-      /\b\w/g,
-      (char) => char.toUpperCase()
-    );
-}
-
-
-/* ================================================
-   NAV ITEM
-================================================ */
+// =====================================================
+// NAV ITEM
+// =====================================================
 
 function NavItem({
   icon,
   text,
   active,
+  onClick,
 }) {
 
   return (
@@ -901,18 +861,14 @@ function NavItem({
       className={`nav-item ${
         active ? "active" : ""
       }`}
+      onClick={onClick}
     >
 
       <span className="nav-icon">
 
         <img
           src={icon}
-          alt={text}
-          style={{
-            width: 18,
-            height: 18,
-            objectFit: "contain",
-          }}
+          alt=""
         />
 
       </span>
@@ -926,9 +882,9 @@ function NavItem({
 }
 
 
-/* ================================================
-   STAT CARD
-================================================ */
+// =====================================================
+// STAT CARD
+// =====================================================
 
 function StatCard({
   icon,
@@ -942,7 +898,6 @@ function StatCard({
   return (
 
     <div className="stat-card">
-
 
       <div
         className={`stat-card-icon ${type}`}
@@ -965,11 +920,13 @@ function StatCard({
 
         <div className="stat-change">
 
-          <span>
-            {change || ""}
-          </span>
+          {change && (
+            <span>
+              {change}
+            </span>
+          )}
 
-          {description || ""}
+          {description}
 
         </div>
 
@@ -985,9 +942,9 @@ function StatCard({
 }
 
 
-/* ================================================
-   QUICK ACTION
-================================================ */
+// =====================================================
+// QUICK ACTION
+// =====================================================
 
 function QuickAction({
   icon,
@@ -999,7 +956,6 @@ function QuickAction({
   return (
 
     <button className="quick-action">
-
 
       <div
         className={`quick-action-icon ${type}`}
@@ -1021,7 +977,7 @@ function QuickAction({
       </div>
 
 
-      <span className="action-arrow">
+      <span className="quick-action-arrow">
         →
       </span>
 
@@ -1030,9 +986,9 @@ function QuickAction({
 }
 
 
-/* ================================================
-   EMPLOYEE ROW
-================================================ */
+// =====================================================
+// EMPLOYEE ROW
+// =====================================================
 
 function EmployeeRow({
   initials,
@@ -1042,14 +998,17 @@ function EmployeeRow({
   status,
 }) {
 
-  const isActive =
-    status === "Active";
+  const statusClass =
+    status === "Active"
+      ? "status-active"
+      : status === "On Leave"
+      ? "status-leave"
+      : "status-terminated";
 
 
   return (
 
     <div className="employee-row">
-
 
       <div className="employee-avatar">
         {initials}
@@ -1075,11 +1034,7 @@ function EmployeeRow({
 
 
       <div
-        className={`employee-status ${
-          isActive
-            ? "status-active"
-            : "status-leave"
-        }`}
+        className={`employee-status ${statusClass}`}
       >
         {status}
       </div>
@@ -1089,9 +1044,9 @@ function EmployeeRow({
 }
 
 
-/* ================================================
-   DEPARTMENT
-================================================ */
+// =====================================================
+// DEPARTMENT
+// =====================================================
 
 function Department({
   name,
@@ -1103,13 +1058,11 @@ function Department({
 
     <div className="department-item">
 
-
       <div className="department-top">
 
         <span>
           {name}
         </span>
-
 
         <strong>
           {count}
@@ -1125,7 +1078,7 @@ function Department({
           style={{
             width: percentage,
           }}
-        ></div>
+        />
 
       </div>
 
@@ -1134,4 +1087,24 @@ function Department({
 }
 
 
-export default App;
+// =====================================================
+// STATUS FORMATTER
+// =====================================================
+
+function formatStatus(status) {
+
+  if (!status) {
+    return "Unknown";
+  }
+
+  return status
+    .toLowerCase()
+    .replace(/_/g, " ")
+    .replace(
+      /\b\w/g,
+      (char) => char.toUpperCase()
+    );
+}
+
+
+export default DashboardPage;
