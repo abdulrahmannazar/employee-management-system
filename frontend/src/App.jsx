@@ -5,6 +5,8 @@ import CompanyPage from "./CompanyPage.jsx";
 import CompanyDetailsPage from "./CompanyDetailsPage.jsx";
 import DepartmentPage from "./DepartmentPage.jsx";
 import EmployeeDetailsPage from "./EmployeeDetailsPage.jsx";
+import EmployeesPage from "./EmployeesPage.jsx";
+
 
 function App() {
   return (
@@ -33,6 +35,11 @@ function App() {
       <Route
         path="/companies/:companyId/departments/:departmentId"
         element={<DepartmentPage />}
+      />
+
+      <Route
+        path="/employees"
+        element={<EmployeesPage />}
       />
 
       <Route
