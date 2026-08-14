@@ -6,59 +6,133 @@ import CompanyDetailsPage from "./CompanyDetailsPage.jsx";
 import DepartmentPage from "./DepartmentPage.jsx";
 import EmployeeDetailsPage from "./EmployeeDetailsPage.jsx";
 import EmployeesPage from "./EmployeesPage.jsx";
+import RegisterPage from "./RegisterPage.jsx";
 
+import LoginPage from "./LoginPage.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 
 function App() {
-  return (
-    <Routes>
+    return (
+        <Routes>
 
-      <Route
-        path="/"
-        element={<DashboardPage />}
-      />
+            {/* PUBLIC ROUTES */}
 
-      <Route
-        path="/dashboard"
-        element={<DashboardPage />}
-      />
+            <Route
+                path="/login"
+                element={<LoginPage />}
+            />
 
-      <Route
-        path="/companies"
-        element={<CompanyPage />}
-      />
+            <Route
+                path="/register"
+                element={<RegisterPage />}
+            />
 
-      <Route
-        path="/companies/:companyId"
-        element={<CompanyDetailsPage />}
-      />
+            {/* PROTECTED ROUTES */}
 
-      <Route
-        path="/companies/:companyId/departments/:departmentId"
-        element={<DepartmentPage />}
-      />
+            <Route
+                path="/"
+                element={
+                    <ProtectedRoute>
+                        <DashboardPage />
+                    </ProtectedRoute>
+                }
+            />
 
-      <Route
-        path="/employees"
-        element={<EmployeesPage />}
-      />
+            <Route
+                path="/dashboard"
+                element={
+                    <ProtectedRoute>
+                        <DashboardPage />
+                    </ProtectedRoute>
+                }
+            />
 
-      <Route
-        path="/employees/:employeeId"
-        element={<EmployeeDetailsPage />}
-      />
+            {/* ADMIN + HR */}
 
-      <Route
-        path="*"
-        element={
-          <Navigate
-            to="/dashboard"
-            replace
-          />
-        }
-      />
+            <Route
+                path="/companies"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[
+                            "ADMIN",
+                            "HR"
+                        ]}
+                    >
+                        <CompanyPage />
+                    </ProtectedRoute>
+                }
+            />
 
-    </Routes>
-  );
+            <Route
+                path="/companies/:companyId"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[
+                            "ADMIN",
+                            "HR"
+                        ]}
+                    >
+                        <CompanyDetailsPage />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/companies/:companyId/departments/:departmentId"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[
+                            "ADMIN",
+                            "HR"
+                        ]}
+                    >
+                        <DepartmentPage />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/employees"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[
+                            "ADMIN",
+                            "HR"
+                        ]}
+                    >
+                        <EmployeesPage />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/employees/:employeeId"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[
+                            "ADMIN",
+                            "HR"
+                        ]}
+                    >
+                        <EmployeeDetailsPage />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* UNKNOWN ROUTE */}
+
+            <Route
+                path="*"
+                element={
+                    <Navigate
+                        to="/dashboard"
+                        replace
+                    />
+                }
+            />
+
+        </Routes>
+    );
 }
 
 export default App;

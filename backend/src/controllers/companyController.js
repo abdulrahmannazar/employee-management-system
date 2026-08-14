@@ -58,11 +58,21 @@ const getCompanies = async (req, res) => {
                 c.phone,
                 c.address,
                 c.status,
-                COUNT(e.employee_id)::INTEGER AS employee_count
+
+                COUNT(
+                    CASE
+                        WHEN e.status IN ('ACTIVE', 'ON_LEAVE')
+                        THEN e.employee_id
+                    END
+                )::INTEGER AS employee_count
+
              FROM companies c
+
              LEFT JOIN employees e
                 ON c.company_id = e.company_id
+
              GROUP BY c.company_id
+
              ORDER BY c.company_id`
         );
 
@@ -76,7 +86,6 @@ const getCompanies = async (req, res) => {
         });
     }
 };
-
 
 
 // GET ONE COMPANY
@@ -95,7 +104,12 @@ const getCompanyById = async (req, res) => {
                 c.phone,
                 c.address,
                 c.status,
-                COUNT(e.employee_id)::INTEGER AS employee_count
+                COUNT(
+                    CASE
+                        WHEN e.status IN ('ACTIVE', 'ON_LEAVE')
+                        THEN e.employee_id
+                    END
+                )::INTEGER AS employee_count
              FROM companies c
              LEFT JOIN employees e
                 ON c.company_id = e.company_id
@@ -205,8 +219,9 @@ const deleteCompany = async (req, res) => {
         // Check whether company has employees
         const employees = await pool.query(
             `SELECT COUNT(*)::INTEGER AS count
-             FROM employees
-             WHERE company_id = $1`,
+            FROM employees
+            WHERE company_id = $1
+            AND status IN ('ACTIVE', 'ON_LEAVE')`,
             [id]
         );
 

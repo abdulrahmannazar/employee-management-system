@@ -521,19 +521,7 @@ function DashboardPage() {
               </div>
 
 
-              <button className="date-selector">
-
-                <span className="calendar-icon">
-                  ▣
-                </span>
-
-                This month
-
-                <span>
-                  ⌄
-                </span>
-
-              </button>
+              
 
             </section>
 
