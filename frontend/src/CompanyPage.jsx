@@ -2,6 +2,7 @@
 import "./CompanyPage.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext.jsx";
 
 import homeIcon from "./assets/home.png";
 import officeIcon from "./assets/office-building.png";
@@ -24,6 +25,11 @@ function CompanyPage() {
 
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("success");
+
+  const { user } = useAuth();
+
+  const userInitial =
+    user?.name?.trim()?.charAt(0)?.toUpperCase() || "U";
 
   const [form, setForm] = useState({
     name: "",
@@ -460,17 +466,17 @@ function CompanyPage() {
               <div className="company-user-info">
 
                 <strong>
-                  Rahma Nizer
+                  {user?.name || "User"}
                 </strong>
 
                 <small>
-                  Administrator
+                  {user?.role || "Employee"}
                 </small>
 
               </div>
 
               <div className="company-avatar">
-                RN
+                {userInitial}
               </div>
 
             </div>

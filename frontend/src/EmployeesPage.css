@@ -1686,3 +1686,50 @@
   }
 
 }
+.employees-topbar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.employees-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.employees-profile-avatar {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #8b3ff2;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.employees-profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.employees-profile-info strong {
+    color: #f5f5f7;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.employees-profile-info span {
+    color: #858b9e;
+    font-size: 10px;
+}

@@ -4,6 +4,9 @@ import "./EmployeesPage.css";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "./AuthContext.jsx";
+
+
 import homeIcon from "./assets/home.png";
 import officeIcon from "./assets/office-building.png";
 import teamIcon from "./assets/team.png";
@@ -12,6 +15,9 @@ const API_URL = "http://localhost:5000/api";
 
 function EmployeesPage() {
   const navigate = useNavigate();
+  
+  const { user } = useAuth();
+
 
   const [employees, setEmployees] = useState([]);
   const [companies, setCompanies] = useState([]);
@@ -32,6 +38,11 @@ function EmployeesPage() {
 
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+
+  
+
+  const userInitial =
+    user?.name?.trim()?.charAt(0)?.toUpperCase() || "U";
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -1011,24 +1022,26 @@ function EmployeesPage() {
                 : "☰"}
             </button>
 
-            <div className="employees-topbar-left"></div>
+            <div className="employees-topbar-right">
+            </div>
 
             <div className="employees-user">
 
               <div className="employees-user-info">
 
                 <strong>
-                  Rahma Nizer
-                </strong>
+                    {user?.name || "User"}
+                  </strong>
 
                 <small>
-                  Administrator
+                  {user?.role || "Employee"}
                 </small>
 
               </div>
+            
 
               <div className="employees-avatar">
-                RN
+                {userInitial}
               </div>
 
             </div>

@@ -1,5 +1,7 @@
 import "./DashboardPage.css";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext.jsx";
 
 import {
   getDashboard,
@@ -18,6 +20,9 @@ function DashboardPage() {
   // STATE
   // =====================================================
 
+  const navigate = useNavigate();
+  
+
   const [dashboard, setDashboard] = useState(null);
   const [recentEmployees, setRecentEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -27,7 +32,10 @@ function DashboardPage() {
   const [error, setError] = useState("");
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
+  const userInitial =
+    user?.name?.trim()?.charAt(0)?.toUpperCase() || "U"
 
   // =====================================================
   // LOAD DASHBOARD
@@ -469,18 +477,18 @@ function DashboardPage() {
                 <div className="user-info">
 
                   <strong>
-                    Rahma Nizer
+                    {user?.name || "User"}
                   </strong>
 
                   <small>
-                    Administrator
+                    {user?.role || "Employee"}
                   </small>
 
                 </div>
 
 
                 <div className="user-avatar">
-                  RN
+                  {userInitial}
                 </div>
 
               </div>
@@ -510,7 +518,10 @@ function DashboardPage() {
                 </p>
 
                 <h1>
-                  Welcome, <span>Rahma</span>
+                  Welcome,{" "}
+                  <span>
+                    {user?.name?.split(" ")[0] || "User"}
+                  </span>
                 </h1>
 
                 <p className="welcome-description">
@@ -607,6 +618,7 @@ function DashboardPage() {
                     title="Add employee"
                     description="Create employee profile"
                     type="purple"
+                    onClick={() => navigate("/employees")}
                   />
 
 
@@ -615,6 +627,7 @@ function DashboardPage() {
                     title="Add department"
                     description="Create new department"
                     type="blue"
+                    onClick={() => navigate("/companies")}
                   />
 
 
@@ -663,12 +676,10 @@ function DashboardPage() {
 
                   <button
                     className="recent-view-all"
-                    onClick={() => {
-                      // navigate to employees page
-                    }}
+                    onClick={() => navigate("/employees")}
                   >
                     View all
-                </button>
+                  </button>
                 </div>
 
 
@@ -939,11 +950,16 @@ function QuickAction({
   title,
   description,
   type,
+  onClick,
 }) {
 
   return (
 
-    <button className="quick-action">
+    <button
+      className="quick-action"
+      onClick={onClick}
+      type="button"
+    >
 
       <div
         className={`quick-action-icon ${type}`}
