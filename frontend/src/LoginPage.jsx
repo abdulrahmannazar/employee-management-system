@@ -30,7 +30,7 @@ function LoginPage() {
 
         try {
             const response = await fetch(
-                "http://localhost:5000/api/auth/login",
+                "https://employee-management-system-cb7g.onrender.com/api/auth/login",
                 {
                     method: "POST",
                     headers: {

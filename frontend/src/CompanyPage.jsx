@@ -8,7 +8,7 @@ import homeIcon from "./assets/home.png";
 import officeIcon from "./assets/office-building.png";
 import teamIcon from "./assets/team.png";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://employee-management-system-cb7g.onrender.com/api";
 
 function CompanyPage() {
   const navigate = useNavigate();

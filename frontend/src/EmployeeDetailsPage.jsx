@@ -31,7 +31,7 @@ function EmployeeDetailsPage() {
         }
 
         const response = await fetch(
-          `http://localhost:5000/api/employees/${employeeId}`,
+          `https://employee-management-system-cb7g.onrender.com/api/employees/${employeeId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

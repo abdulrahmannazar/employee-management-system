@@ -38,7 +38,7 @@ function DepartmentPage() {
         }
 
         const response = await fetch(
-          `http://localhost:5000/api/departments/${departmentId}`,
+          `https://employee-management-system-cb7g.onrender.com/api/departments/${departmentId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
