@@ -559,6 +559,24 @@ button {
   color: #b66aff;
 
   font-size: 17px;
+
+}
+.company-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(145, 70, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.company-card-icon img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
 }
 
 .company-status {

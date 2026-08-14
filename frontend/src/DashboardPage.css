@@ -1307,3 +1307,15 @@ button:focus-visible {
   }
 
 }
+.stat-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: block;
+}
+.quick-action-icon img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}

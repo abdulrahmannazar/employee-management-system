@@ -12,7 +12,8 @@ import {
 import homeIcon from "./assets/home.png";
 import officeIcon from "./assets/office-building.png";
 import teamIcon from "./assets/team.png";
-
+import clockIcon from "./assets/clock.png";
+import plusIcon from "./assets/add.png";
 
 function DashboardPage() {
 
@@ -544,7 +545,7 @@ function DashboardPage() {
             <section className="stats-grid">
 
               <StatCard
-                icon="♙"
+                icon={teamIcon}
                 label="Total employees"
                 value={totalEmployees}
                 type="purple"
@@ -552,7 +553,7 @@ function DashboardPage() {
 
 
               <StatCard
-                icon="✓"
+                icon={teamIcon}
                 label="Active employees"
                 value={activeEmployees}
                 change={`${activePercentage}%`}
@@ -562,7 +563,7 @@ function DashboardPage() {
 
 
               <StatCard
-                icon="◷"
+                icon={clockIcon}
                 label="On leave"
                 value={onLeaveCount}
                 change={`${onLeavePercentage}%`}
@@ -572,7 +573,7 @@ function DashboardPage() {
 
 
               <StatCard
-                icon="◇"
+                icon={officeIcon}
                 label="Companies"
                 value={totalCompanies}
                 type="pink"
@@ -614,7 +615,7 @@ function DashboardPage() {
                 <div className="action-list">
 
                   <QuickAction
-                    icon="+"
+                    icon={plusIcon}
                     title="Add employee"
                     description="Create employee profile"
                     type="purple"
@@ -623,7 +624,7 @@ function DashboardPage() {
 
 
                   <QuickAction
-                    icon="◇"
+                    icon={officeIcon}
                     title="Add department"
                     description="Create new department"
                     type="blue"
@@ -631,12 +632,7 @@ function DashboardPage() {
                   />
 
 
-                  <QuickAction
-                    icon="▤"
-                    title="Generate report"
-                    description="View HR analytics"
-                    type="pink"
-                  />
+                  
 
                 </div>
 
@@ -898,10 +894,8 @@ function StatCard({
 
     <div className="stat-card">
 
-      <div
-        className={`stat-card-icon ${type}`}
-      >
-        {icon}
+      <div className="stat-icon">
+          <img src={icon} alt="" />
       </div>
 
 
@@ -964,7 +958,7 @@ function QuickAction({
       <div
         className={`quick-action-icon ${type}`}
       >
-        {icon}
+        <img src={icon} alt="" />
       </div>
 
 

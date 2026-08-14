@@ -844,7 +844,10 @@ function CompanyCard({
         >
 
           <div className="company-card-icon">
-            ◇
+             <img
+                src={officeIcon}
+                alt="Company"
+              />
           </div>
 
           <span
