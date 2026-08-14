@@ -34,7 +34,7 @@ function RegisterPage() {
 
         try {
             const response = await fetch(
-                "http://localhost:5000/api/auth/register",
+                "https://employee-management-system-cb7g.onrender.com/api/auth/register",
                 {
                     method: "POST",
 
@@ -61,7 +61,7 @@ function RegisterPage() {
             
 
             const loginResponse = await fetch(
-                "http://localhost:5000/api/auth/login",
+                "https://employee-management-system-cb7g.onrender.com/api/auth/login",
                 {
                     method: "POST",
 
